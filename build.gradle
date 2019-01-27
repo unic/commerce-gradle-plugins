@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2019 Unic AG
+ */
+
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'groovy'
+}
+
+group 'com.unic.hybristoolkit.build.plugin'
+
+gradlePlugin {
+    plugins {
+        setuphybris {
+            id = 'com.unic.hybristoolkit.build.plugin.setuphybris'
+            implementationClass = 'com.unic.hybristoolkit.build.plugin.setuphybris.SetupHybrisPlugin'
+        }
+        installmysqldriver {
+            id = 'com.unic.hybristoolkit.build.plugin.installmysqldriver'
+            implementationClass = 'com.unic.hybristoolkit.build.plugin.installmysqldriver.InstallMysqlDriverPlugin'
+        }
+        hybrisantwrapper {
+            id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
+            implementationClass = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperPlugin'
+        }
+    }
+}
+publishing {
+  repositories {
+    maven {
+      credentials { username nexusUser(); password nexusPass() }
+      url "https://nexus.unic.com/nexus/repository/unic-ecom-releases/"
+    }
+  }
+}
+
+def nexusUser() {
+	project.hasProperty('unicNexusUser')?unicNexusUser:System.getenv('NEXUS_USER')
+}
+
+def nexusPass() {
+    project.hasProperty('unicNexusPassword')?unicNexusPassword:System.getenv('NEXUS_PASSWORD')
+}
