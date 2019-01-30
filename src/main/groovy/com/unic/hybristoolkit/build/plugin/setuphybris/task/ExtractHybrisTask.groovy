@@ -5,7 +5,9 @@
 package com.unic.hybristoolkit.build.plugin.setuphybris.task
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileCopyDetails
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -14,8 +16,10 @@ import org.gradle.api.tasks.TaskAction
  */
 class ExtractHybrisTask extends DefaultTask {
 
+    final Property<File> hybrisZip = project.objects.property(File)
+
     ExtractHybrisTask() {
-        def hybrisDir = new File(project.projectDir, "hybris");
+        def hybrisDir = project.file("hybris");
         outputs.upToDateWhen { hybrisDir.exists() }
     }
 
@@ -23,13 +27,13 @@ class ExtractHybrisTask extends DefaultTask {
     def run() {
         // TODO check for the existence of project.configurations.hybris and log a hint if it's missing.
 
-        logger.quiet(">>> Extracting {} to {}", project.configurations.hybris.collect { it.name }, project.projectDir)
+        logger.quiet(">>> Extracting {} to {}", hybrisZip.get().name, project.projectDir)
         logger.quiet(">>> \tIncluding {}", project.setupHybris.includeForExtractHybris)
         logger.quiet(">>> \tExcluding {}", project.setupHybris.excludeForExtractHybris)
         def copyDetails = []
         project.copy {
             from { // use of closure defers evaluation until execution time
-                project.configurations.hybris.collect { project.zipTree(it) }
+                project.zipTree(hybrisZip.get())
             }
             include project.setupHybris.includeForExtractHybris
             exclude project.setupHybris.excludeForExtractHybris
@@ -40,7 +44,7 @@ class ExtractHybrisTask extends DefaultTask {
 
         // restore file dates, see https://issues.gradle.org/browse/GRADLE-2698
         copyDetails.each { FileCopyDetails details ->
-            def target = new File(project.projectDir, details.path)
+            def target = project.file(details.path)
             if (target.exists()) {
                 target.setLastModified(details.lastModified)
             }

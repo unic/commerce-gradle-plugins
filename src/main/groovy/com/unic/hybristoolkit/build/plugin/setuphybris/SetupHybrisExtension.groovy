@@ -10,4 +10,9 @@ package com.unic.hybristoolkit.build.plugin.setuphybris
 class SetupHybrisExtension {
     List includeForExtractHybris = ['hybris/**', 'installer/**']
     List excludeForExtractHybris = []
+    /**
+     * The depencency string used to fetch the hybris zip.
+     */
+    def hybrisDependency = 'de.hybris.platform:hybris-commerce-suite:6.6.0.8@zip'
+
 }

@@ -18,7 +18,7 @@ class SetupHybrisPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
 
-        project.extensions.create('setupHybris', SetupHybrisExtension)
+        def extension = project.extensions.create('setupHybris', SetupHybrisExtension)
 
         def extractHybrisTask = project.task('extractHybris', type: ExtractHybrisTask) {
             group "Unic Hybris Toolkit"
@@ -37,5 +37,18 @@ class SetupHybrisPlugin implements Plugin<Project> {
 
         initialHybrisBuildTask.dependsOn(extractHybrisTask)
         configureHybrisTask.dependsOn(initialHybrisBuildTask)
+
+        project.afterEvaluate {
+            project.configurations {
+                setupHybris
+            }
+            project.dependencies {
+                setupHybris project.extensions.setupHybris.hybrisDependency
+            }
+            def setupHybrisConfiguration = project.configurations.setupHybris
+
+            // pass the sonar jar to the SonarRunner (to be used as classpath)
+            project.tasks.extractHybris.hybrisZip.set(setupHybrisConfiguration.singleFile)
+        }
     }
 }

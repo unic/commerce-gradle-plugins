@@ -18,7 +18,7 @@ class HybrisAntTask extends DefaultTask {
     /**
     * The arguments to pass to the ant runner. Usually you would at least specify a target to execute.
     */
-    def arguments
+    def arguments = []
     /**
      * System properties to set. Each property will be passed in the form of '-Dkey=value'.
      */

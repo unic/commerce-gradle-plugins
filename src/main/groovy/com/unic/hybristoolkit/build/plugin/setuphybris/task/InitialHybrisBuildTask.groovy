@@ -15,6 +15,7 @@ class InitialHybrisBuildTask extends HybrisAntTask {
     InitialHybrisBuildTask() {
         def hybrisConfigDir = new File(project.projectDir, 'hybris/config')
         outputs.upToDateWhen { hybrisConfigDir.exists() }
+        arguments = ['all']
     }
 
     def doFirst() {
@@ -28,10 +29,5 @@ class InitialHybrisBuildTask extends HybrisAntTask {
         String content = extensionsFile.getText()
         content = content.replaceAll('<extension +name="yempty" +\\/>', '')
         extensionsFile.setText(content)
-    }
-
-    @TaskAction
-    def run() {
-        args 'all'
     }
 }
