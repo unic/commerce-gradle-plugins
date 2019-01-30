@@ -24,6 +24,10 @@ gradlePlugin {
             id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
             implementationClass = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperPlugin'
         }
+        codequality {
+            id = 'com.unic.hybristoolkit.build.plugin.codequality'
+            implementationClass = 'com.unic.hybristoolkit.build.plugin.codequality.CodeQualityPlugin'
+        }
     }
 }
 publishing {

@@ -26,27 +26,58 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
         }
 
         project.task('hybrisUnittests', type: HybrisAntTask) {
+            doFirst { adjustJunitReportAndTempDirectory(project) }
+            doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant unittests' target."
+            systemProperty 'testclasses.annotations', 'unittests'
+            systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/unittests'
+            systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/unittests'
+            systemProperty 'testclasses.suppress.junit.tenant', 'true'
             args 'unittests'
         }
 
+        project.task('hybrisWebUnittests', type: HybrisAntTask) {
+            doFirst { adjustJunitReportAndTempDirectory(project) }
+            doLast { resetJunitReportAndTempDirectory(project) }
+            group 'Unic Hybris Toolkit - Wrapped Tasks'
+            description "Runs 'ant allwebtests' target with an annotation-limitation for unittests."
+            systemProperty 'testclasses.annotations', 'unittests'
+            systemProperty 'testclasses.suppress.junit.tenant', 'true'
+            systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webunittests'
+            systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webunittests'
+            args 'allwebtests'
+        }
+
         project.task('hybrisIntegrationtests', type: HybrisAntTask) {
+            doFirst { adjustJunitReportAndTempDirectory(project) }
+            doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant integrationtests' target."
+            systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/integrationtests'
+            systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/integrationtests'
             args 'integrationtests'
         }
 
-        project.task('hybrisAlltests', type: HybrisAntTask) {
+        project.task('hybrisWebIntegrationtests', type: HybrisAntTask) {
+            doFirst { adjustJunitReportAndTempDirectory(project) }
+            doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
-            description "Runs 'ant alltests' target."
-            args 'alltests'
+            description "Runs 'ant allwebtests' target with an annotation-limitation for integrationtests."
+            systemProperty 'testclasses.annotations', 'integrationtests'
+            systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webintegrationtests'
+            systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webintegrationtests'
+            args 'allwebtests'
         }
 
-        project.task('hybrisAllwebtests', type: HybrisAntTask) {
+        project.task('hybrisAlltests', type: HybrisAntTask) {
+            doFirst { adjustJunitReportAndTempDirectory(project) }
+            doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
-            description "Runs 'ant allwebtests' target."
-            args 'allwebtests'
+            description "Runs 'ant alltests' target."
+            systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/alltests'
+            systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/alltests'
+            args 'alltests'
         }
 
         project.task('hybrisInitialize', type: HybrisAntTask) {
@@ -68,7 +99,46 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             args 'roduction', '-Dde.hybris.platform.ant.production.skip.build=true', '-Dproduction.legacy.mode=false'
         }
 
+
     }
 
+    /**
+     * Modifies the ant test targets to output junit reports to hybris/log/junit
+     * @param project the project to modify
+     */
+    def adjustJunitReportAndTempDirectory(project) {
+        project.ant.replaceregexp(match: '\\$\\{HYBRIS_LOG_DIR\\}\\/junit',
+                replace: '${testclasses.junit.results.directory}',
+                flags: 'g',
+                byline: true) {
+            fileset(dir: 'hybris/bin/platform/resources/ant', includes: 'testing.xml')
+        }
 
+        project.ant.replaceregexp(match: '\\$\\{HYBRIS_TEMP_DIR\\}\\/junit',
+                replace: '${testclasses.junit.temp.directory}',
+                flags: 'g',
+                byline: true) {
+            fileset(dir: 'hybris/bin/platform/resources/ant', includes: 'testing.xml')
+        }
+    }
+
+    /**
+     * resets the default output behaviour of ant test targets
+     * @param project the project to modify
+     */
+    def resetJunitReportAndTempDirectory(project) {
+        project.ant.replaceregexp(match: '\\$\\{testclasses.junit.results.directory\\}',
+                replace: '${HYBRIS_LOG_DIR}/junit',
+                flags: 'g',
+                byline: true) {
+            fileset(dir: 'hybris/bin/platform/resources/ant', includes: 'testing.xml')
+        }
+
+        project.ant.replaceregexp(match: '\\$\\{testclasses.junit.temp.directory\\}',
+                replace: '${HYBRIS_TEMP_DIR}/junit',
+                flags: 'g',
+                byline: true) {
+            fileset(dir: 'hybris/bin/platform/resources/ant', includes: 'testing.xml')
+        }
+    }
 }
