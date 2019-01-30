@@ -4,28 +4,33 @@
 
 package com.unic.hybristoolkit.build.plugin.hybrisantwrapper
 
+
 import com.unic.hybristoolkit.build.plugin.hybrisantwrapper.task.HybrisAntTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * A Plugin that aims to wrap the hybris ant targets to be easily used in gradle builds.
+ */
 class HybrisAntWrapperPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        def extension = project.extensions.create("hybrisAntWrapper", HybrisAntWrapperExtension, project)
 
-        project.task('hybrisAll', type: HybrisAntTask) {
+        project.tasks.create('hybrisAll', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant all' target."
-            args 'all'
+            arguments = 'all'
         }
 
-        project.task('hybrisClean', type: HybrisAntTask) {
+        project.tasks.create('hybrisClean', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant clean' target."
-            args 'clean'
+            arguments = 'clean'
         }
 
-        project.task('hybrisUnittests', type: HybrisAntTask) {
+        project.tasks.create('hybrisUnittests', HybrisAntTask) {
             doFirst { adjustJunitReportAndTempDirectory(project) }
             doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
@@ -34,10 +39,11 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/unittests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/unittests'
             systemProperty 'testclasses.suppress.junit.tenant', 'true'
-            args 'unittests'
+            testpackages = extension.testpackages
+            arguments = 'unittests'
         }
 
-        project.task('hybrisWebUnittests', type: HybrisAntTask) {
+        project.tasks.create('hybrisWebUnittests', HybrisAntTask) {
             doFirst { adjustJunitReportAndTempDirectory(project) }
             doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
@@ -46,20 +52,22 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.suppress.junit.tenant', 'true'
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webunittests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webunittests'
-            args 'allwebtests'
+            testpackages = extension.testpackages
+            arguments = 'allwebtests'
         }
 
-        project.task('hybrisIntegrationtests', type: HybrisAntTask) {
+        project.tasks.create('hybrisIntegrationtests', HybrisAntTask) {
             doFirst { adjustJunitReportAndTempDirectory(project) }
             doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant integrationtests' target."
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/integrationtests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/integrationtests'
-            args 'integrationtests'
+            testpackages = extension.testpackages
+            arguments = 'integrationtests'
         }
 
-        project.task('hybrisWebIntegrationtests', type: HybrisAntTask) {
+        project.tasks.create('hybrisWebIntegrationtests', HybrisAntTask) {
             doFirst { adjustJunitReportAndTempDirectory(project) }
             doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
@@ -67,39 +75,39 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.annotations', 'integrationtests'
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webintegrationtests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webintegrationtests'
-            args 'allwebtests'
+            testpackages = extension.testpackages
+            arguments = 'allwebtests'
         }
 
-        project.task('hybrisAlltests', type: HybrisAntTask) {
+        project.tasks.create('hybrisAlltests', HybrisAntTask) {
             doFirst { adjustJunitReportAndTempDirectory(project) }
             doLast { resetJunitReportAndTempDirectory(project) }
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant alltests' target."
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/alltests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/alltests'
-            args 'alltests'
+            testpackages = extension.testpackages
+            arguments = 'alltests'
         }
 
-        project.task('hybrisInitialize', type: HybrisAntTask) {
+        project.tasks.create('hybrisInitialize', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Initializes hybris."
-            args 'initialize'
+            arguments = 'initialize'
         }
 
-        project.task('hybrisYunitinit', type: HybrisAntTask) {
+        project.tasks.create('hybrisYunitinit', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Initializes JUnit tenant for hybris."
-            args 'yunitinit'
+            arguments = 'yunitinit'
         }
 
 
-        project.task('hybrisProduction', type: HybrisAntTask) {
+        project.tasks.create('hybrisProduction', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant production' target."
-            args 'roduction', '-Dde.hybris.platform.ant.production.skip.build=true', '-Dproduction.legacy.mode=false'
+            arguments = ['production', '-Dde.hybris.platform.ant.production.skip.build=true', '-Dproduction.legacy.mode=false']
         }
-
-
     }
 
     /**

@@ -4,22 +4,46 @@
 
 package com.unic.hybristoolkit.build.plugin.codequality
 
+import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Property
+
 /**
  * Extension class for the HybrisAntWrapper extension
  */
 class CodeQualityExtension {
+
+    def project
+    final Property<FileCollection> sonarClasspath
+
+    /**
+     * The depencency string used to fetch the jacoco agent jar.
+     */
     def jacocoDependency = 'org.jacoco:org.jacoco.agent:0.7.7.201606060606:runtime'
+    /**
+     * The depencency string used to fetch the sonarrunner jar.
+     */
+    def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:3.1.0.1141@jar'
+    /**
+     * The configuration file of the local hybris installation (default; hybris/config/local.properties)
+     */
     def configFile
 
+
     CodeQualityExtension(project) {
+        this.project = project
         configFile = project.file('hybris/config/local.properties')
+        sonarClasspath = project.objects.property(FileCollection)
     }
 
     void setJacocoDependency(jacocoDependency) {
         this.jacocoDependency = jacocoDependency
     }
 
+    void setSonarDependency(sonarDependency) {
+        this.sonarDependency = sonarDependency
+    }
+
     void setConfigFile(configFile) {
-        this.configFile = configFile instanceof String ? project.file(configPath) : configFile
+        this.configFile = configFile instanceof String ? project.file(configFile) : configFile
     }
 }
