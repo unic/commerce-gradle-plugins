@@ -4,6 +4,7 @@
 
 package com.unic.hybristoolkit.build.plugin.installmysqldriver
 
+import com.unic.hybristoolkit.build.plugin.setuphybris.SetupHybrisExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
@@ -15,8 +16,7 @@ class InstallMysqlDriverPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        //project.configurations.create("mysql")
-        //project.configurations.mysql.add("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+        def extension = project.extensions.create('installMysql', InstallMysqlDriverExtension)
 
         def jarName = "mysql-connector-java.jar"
         def mysqlConnectionLib = new File(project.projectDir, "hybris/bin/platform/lib/dbdriver/${jarName}")
@@ -46,5 +46,14 @@ class InstallMysqlDriverPlugin implements Plugin<Project> {
         }
 
         installMysqlDriverTask.dependsOn('extractHybris')
+
+        project.afterEvaluate {
+            project.configurations {
+                mysql
+            }
+            project.dependencies {
+                mysql extension.mysqlDependency
+            }
+        }
     }
 }
