@@ -23,15 +23,10 @@ class CodeQualityExtension {
      * The depencency string used to fetch the sonarrunner jar.
      */
     def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:3.1.0.1141@jar'
-    /**
-     * The configuration file of the local hybris installation (default; hybris/config/local.properties)
-     */
-    def configFile
 
 
     CodeQualityExtension(project) {
         this.project = project
-        configFile = project.file('hybris/config/local.properties')
         sonarClasspath = project.objects.property(FileCollection)
     }
 
@@ -41,9 +36,5 @@ class CodeQualityExtension {
 
     void setSonarDependency(sonarDependency) {
         this.sonarDependency = sonarDependency
-    }
-
-    void setConfigFile(configFile) {
-        this.configFile = configFile instanceof String ? project.file(configFile) : configFile
     }
 }

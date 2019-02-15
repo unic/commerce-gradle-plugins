@@ -2,13 +2,15 @@
  * Copyright (c) 2019 Unic AG
  */
 
-package com.unic.hybristoolkit.build.plugin.setuphybris.task
+package com.unic.hybristoolkit.build.plugin.hybrisantwrapper.task
 
+import com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperExtension
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileCopyDetails
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
+
+import javax.inject.Inject
 
 /**
  * A task to extract a version of hybris, which must be defined as dependency for the 'hybris' configuration.
@@ -18,26 +20,29 @@ class ExtractHybrisTask extends DefaultTask {
 
     final Property<File> hybrisZip = project.objects.property(File)
 
+    final HybrisAntWrapperExtension extension
+
+    @Inject
     ExtractHybrisTask() {
-        def hybrisDir = project.file("hybris");
-        outputs.upToDateWhen { hybrisDir.exists() }
+        this.extension = project.extensions.hybrisAntWrapper
+        outputs.upToDateWhen { new File(extension.hybrisExtractionDir.get(), 'hybris').exists() }
     }
 
     @TaskAction
     def run() {
         // TODO check for the existence of project.configurations.hybris and log a hint if it's missing.
 
-        logger.quiet(">>> Extracting {} to {}", hybrisZip.get().name, project.projectDir)
-        logger.quiet(">>> \tIncluding {}", project.setupHybris.includeForExtractHybris)
-        logger.quiet(">>> \tExcluding {}", project.setupHybris.excludeForExtractHybris)
+        logger.quiet(">>> Extracting {} to {}", hybrisZip.get().name, extension.hybrisExtractionDir.get().absolutePath)
+        logger.quiet(">>> \tIncluding {}", extension.includeForExtractHybris)
+        logger.quiet(">>> \tExcluding {}", extension.excludeForExtractHybris)
         def copyDetails = []
         project.copy {
             from { // use of closure defers evaluation until execution time
                 project.zipTree(hybrisZip.get())
             }
-            include project.setupHybris.includeForExtractHybris
-            exclude project.setupHybris.excludeForExtractHybris
-            into project.projectDir
+            include extension.includeForExtractHybris
+            exclude extension.excludeForExtractHybris
+            into extension.hybrisExtractionDir.get()
 
             eachFile { copyDetails << it }
         }

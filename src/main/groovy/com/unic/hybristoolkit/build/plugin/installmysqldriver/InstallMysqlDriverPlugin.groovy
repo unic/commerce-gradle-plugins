@@ -4,7 +4,6 @@
 
 package com.unic.hybristoolkit.build.plugin.installmysqldriver
 
-import com.unic.hybristoolkit.build.plugin.setuphybris.SetupHybrisExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
@@ -18,30 +17,33 @@ class InstallMysqlDriverPlugin implements Plugin<Project> {
     void apply(Project project) {
         def extension = project.extensions.create('installMysql', InstallMysqlDriverExtension)
 
+        def hybrisAntWrapperExt = project.extensions.hybrisAntWrapper
+
         def jarName = "mysql-connector-java.jar"
-        def mysqlConnectionLib = new File(project.projectDir, "hybris/bin/platform/lib/dbdriver/${jarName}")
-        def hybrisDbDriverDir = new File(project.projectDir, 'hybris/bin/platform/lib/dbdriver')
 
         def installMysqlDriverTask = project.task("installMysqlDriver", type: Copy) {
-
             description "Installs MySQL connection library into hybris."
             group "Unic Hybris Toolkit"
 
-            outputs.upToDateWhen { mysqlConnectionLib.exists() }
+            outputs.upToDateWhen {
+                new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), "hybris/bin/platform/lib/dbdriver/${jarName}").exists()
+            }
 
             doFirst {
-                println ">>> Copy mysql connection lib to $mysqlConnectionLib ..."
+                def hybrisDbDriverDir = new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver')
+                println ">>> Copy mysql connection lib to $hybrisDbDriverDir ..."
             }
 
             from {
                 project.configurations.mysql.collect { it }
             }
-            into hybrisDbDriverDir
+            into { new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver') }
             rename(".*", jarName)
 
             doLast {
-                println ">>> Touch lastupdate file in hybris/bin/platform/lib/dbdriver ..."
-                new File("$project.projectDir/hybris/bin/platform/lib/dbdriver/.lastupdate").setLastModified(System.currentTimeMillis())
+                def hybrisDbDriverDir = new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver')
+                println ">>> Touch lastupdate file in ${hybrisDbDriverDir} ..."
+                new File("${hybrisDbDriverDir}/.lastupdate").setLastModified(System.currentTimeMillis())
             }
         }
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2019 Unic AG
  */
 
-package com.unic.hybristoolkit.build.plugin.setuphybris.task
+package com.unic.hybristoolkit.build.plugin.hybrisantwrapper.task
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -16,8 +16,7 @@ import org.gradle.api.tasks.TaskAction
  *     <li>Copy over all files from customize into ${projectDir}/hybris, replacing existing ones.</li>
  * </ul>
  * <p>By default the configuration from the $projectDir/config/common directory will be picked for copying (see defaultConfigProfile).
- * If the user has the env- variable <pre>CUSTOM_CONFIG_PROFILE<pre> set, the configuration files from ${projectDir}/config/${CUSTOM_CONFIG_PROFILE}
- * take precedence and replace (in case of localextensions.xml) or complement the default ones (customize and local.properties).
+ * If the user has the env- variable <pre>CUSTOM_CONFIG_PROFILE<pre> set, the configuration files from ${projectDir}/config/${CUSTOM_CONFIG_PROFILE}* take precedence and replace (in case of localextensions.xml) or complement the default ones (customize and local.properties).
  * The custom configuration shall always be able to override the common configuration.</p>
  * <p><pre>CUSTOM_CONFIG_PROFILE<pre> may also contain a comma seperated lists of profile names. The profiles to the right have a higher precedence.</p>
  */
@@ -25,8 +24,9 @@ class ConfigureHybrisTask extends DefaultTask {
 // TODO add input, output or internal annotation
 
     def defaultConfigProfile = 'common'
-    def hybrisConfigDir = 'hybris/config'
     def configProfiles = [defaultConfigProfile]
+    def hybrisExtractionDir
+
 
     ConfigureHybrisTask() {
         super()
@@ -53,8 +53,8 @@ class ConfigureHybrisTask extends DefaultTask {
         }
     }
 
-    def mergePropertiesWithFallback(profiles) {
-        def targetFile = project.file(hybrisConfigDir + "/local.properties")
+    def mergePropertiesWithFallback(profiles, targetFile) {
+
 
         logger.quiet(">>> merging profiles ${profiles} into ${targetFile}")
 
@@ -69,10 +69,10 @@ class ConfigureHybrisTask extends DefaultTask {
     def run() {
         // customize
         configProfiles.each {
-            safeCopy(project.file("config/${it}"), project.file('hybris'))
+            safeCopy(project.file("config/${it}"), new File(hybrisExtractionDir.get(), 'hybris'))
         }
 
         // merge local.properties
-        mergePropertiesWithFallback(configProfiles)
+        mergePropertiesWithFallback(configProfiles, new File(hybrisExtractionDir.get(), 'hybris/config/local.properties'))
     }
 }

@@ -5,7 +5,7 @@
 package com.unic.hybristoolkit.build.plugin.installmysqldriver
 
 /**
- * Extension class for the SetupHybris extension
+ * Extension class for the InstallMysqlDriver extension
  */
 class InstallMysqlDriverExtension {
     /**

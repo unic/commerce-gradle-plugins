@@ -14,6 +14,7 @@ import org.gradle.api.Project
 class CodeQualityPlugin implements Plugin<Project> {
 
     def extension
+    def hybrisAntWrapperExtension
     def jacocoConfiguration
     def sonarrunnerConfiguration
     def projectDir
@@ -22,6 +23,7 @@ class CodeQualityPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         extension = project.extensions.create("codeQuality", CodeQualityExtension, project)
+        hybrisAntWrapperExtension = project.extensions.hybrisAntWrapper
         projectDir = project.projectDir
 
         project.pluginManager.apply('com.unic.hybristoolkit.build.plugin.hybrisantwrapper')
@@ -78,11 +80,17 @@ class CodeQualityPlugin implements Plugin<Project> {
     def enableJacoco(classifier) {
         println("BEWARE: Appending Jacoco configuration for integration tests to 'standalone.javaoptions'!")
         def args = "-DjacocoConf=start -javaagent:${jacocoConfiguration.singleFile}=destfile=${projectDir}/hybris/log/jacoco/jacoco-${classifier}.exec,append=true,excludes=*Test -DjacocoConf=end"
-        extension.configFile.text = extension.configFile.text.replaceAll(/(?m)^(standalone\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$/, '$1 ' + args)
+
+        getConfigFile().text = getConfigFile().text.replaceAll(/(?m)^(standalone\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$/, '$1 ' + args)
     }
 
     def disableJacoco() {
         println("BEWARE: Removing Jacoco configuration from 'standalone.javaoptions'")
-        extension.configFile.text = extension.configFile.text.replaceAll(/(?m)^(standalone\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$/, '$1')
+
+        getConfigFile().text = getConfigFile().text.replaceAll(/(?m)^(standalone\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$/, '$1')
+    }
+
+    def getConfigFile(){
+        new File(hybrisAntWrapperExtension.hybrisExtractionDir.get(),'hybris/config/local.properties')
     }
 }

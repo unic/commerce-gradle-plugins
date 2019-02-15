@@ -12,10 +12,6 @@ group 'com.unic.hybristoolkit.build.plugin'
 
 gradlePlugin {
     plugins {
-        setuphybris {
-            id = 'com.unic.hybristoolkit.build.plugin.setuphybris'
-            implementationClass = 'com.unic.hybristoolkit.build.plugin.setuphybris.SetupHybrisPlugin'
-        }
         installmysqldriver {
             id = 'com.unic.hybristoolkit.build.plugin.installmysqldriver'
             implementationClass = 'com.unic.hybristoolkit.build.plugin.installmysqldriver.InstallMysqlDriverPlugin'

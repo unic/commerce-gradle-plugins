@@ -34,8 +34,8 @@ class SonarRunner extends DefaultTask {
         }
     }
 
-    def sonarProperty(key,value){
-        sonarProperties .setProperty(key,value)
+    def sonarProperty(key, value) {
+        sonarProperties.setProperty(key, value)
     }
 
 }
