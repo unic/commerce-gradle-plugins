@@ -19,14 +19,9 @@ Please note that all commands are samples to be used in a bash shell on a Unix-b
 ## Contents
 This library contains the following plugins. Each plugin has it's own README, which contains more information.
 
-* `com.unic.hybristtoolkit.build.plugin.setuphybris`
-
-	A plugin to help you with retrieving, extracting and properly configuring a local hybris installation.
-	<br/>[read more...](README-setuphybris.md)
-
 * `com.unic.hybristtoolkit.build.plugin.hybrisantwrapper`
 
-	This is the heart of this project. It basically wraps the ant targets of the hybris buildsystem in gradle and decorates them with some pixiedust.
+	This is the heart of this project. It basically wraps the ant targets of the hybris buildsystem in gradle and decorates them with some pixiedust. It also helps with downloading, installing and configuring a hybris installation.
 	<br/>[read more...](README-hybrisantwrapper.md)
 
 * `com.unic.hybristtoolkit.build.plugin.codequality`
