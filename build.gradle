@@ -8,6 +8,16 @@ plugins {
     id 'groovy'
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation gradleTestKit()
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
+}
+
 group 'com.unic.hybristoolkit.build.plugin'
 
 gradlePlugin {

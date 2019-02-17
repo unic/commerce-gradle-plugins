@@ -11,9 +11,9 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 	<br/>type: String
 	<br/>default: `de.hybris.platform:sap-commerce-cloud:18.11@zip`
 
-* _hybrisInstallationPath_ - the location of the hybris installation to manage (absolute or relative to `projectDir`).
-	<br/>type: String
-	<br/>default: `hybris`
+* _hybrisExtractionDir_ - Where to extract the hybris zip.
+	<br/>type: File
+	<br/>default: `${project.projectDir}`
 
 * _includeForExtractHybris_ - Includes to consider when extracting hybris.
 	<br/>type: List<String>
