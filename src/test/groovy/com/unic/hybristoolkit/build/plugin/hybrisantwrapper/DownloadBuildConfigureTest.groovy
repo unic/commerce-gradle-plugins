@@ -1,7 +1,6 @@
 package com.unic.hybristoolkit.build.plugin.hybrisantwrapper
 
 import org.apache.groovy.util.Maps
-import org.gradle.internal.impldep.com.google.common.io.PatternFilenameFilter
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.ClassRule
 import org.junit.rules.TemporaryFolder
@@ -16,12 +15,7 @@ class DownloadBuildConfigureTest extends Specification {
 
     @Shared
     @ClassRule
-    TemporaryFolder testProjectDir = new TemporaryFolder(){
-        @Override
-        void delete() {
-            //
-        }
-    }
+    TemporaryFolder testProjectDir = new TemporaryFolder()
 
     def setupSpec() {
         File buildFile = testProjectDir.newFile('build.gradle')
@@ -66,8 +60,8 @@ hybrisAntWrapper{
                 .withPluginClasspath()
                 .withEnvironment(Maps.of("UNIC_TK_V2_CONFIG_PROFILES","commonConfig,subdir/specificConfig,subdir/emptyConfig,path/to/nonexisting/directory"))
                 .build()
-        then:
 
+        then:
         result.task(":extractHybris").outcome == SUCCESS
         result.task(":initialHybrisBuild").outcome == SUCCESS
         result.task(":configureHybris").outcome == SUCCESS
