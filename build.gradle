@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.google.guava:guava:27.0.1-jre'
     testImplementation gradleTestKit()
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'

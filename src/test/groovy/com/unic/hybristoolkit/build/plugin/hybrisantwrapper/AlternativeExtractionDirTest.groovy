@@ -1,6 +1,6 @@
 package com.unic.hybristoolkit.build.plugin.hybrisantwrapper
 
-import org.gradle.internal.impldep.com.google.common.io.PatternFilenameFilter
+import com.google.common.io.PatternFilenameFilter
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder

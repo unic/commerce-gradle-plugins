@@ -18,7 +18,7 @@ class InitialHybrisBuildTask extends HybrisAntTask {
     }
 
     def doFirst() {
-        def extensionsFile = new File(hybrisExtractionDir.get(), 'hybris/bin/platform//extensions.xml')
+        def extensionsFile = new File(hybrisExtractionDir.get(), 'hybris/bin/platform/extensions.xml')
         String content = extensionsFile.getText()
         content = content.replaceAll('<extension +name="yempty" +\\/>', '')
         extensionsFile.setText(content)

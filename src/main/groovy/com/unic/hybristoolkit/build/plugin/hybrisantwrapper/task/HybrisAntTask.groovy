@@ -3,7 +3,7 @@
  */
 package com.unic.hybristoolkit.build.plugin.hybrisantwrapper.task
 
-
+import com.google.common.io.PatternFilenameFilter
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
@@ -33,12 +33,16 @@ class HybrisAntTask extends DefaultTask {
 
     @TaskAction
     def runHybrisTask() {
+        File platformHome = new File(hybrisExtractionDir.get(), 'hybris/bin/platform')
+        File antHome = platformHome.listFiles(new PatternFilenameFilter("apache-ant.*")).first()
+
         project.javaexec {
-            classpath(new File(hybrisExtractionDir.get(), 'hybris/bin/platform/apache-ant-1.9.1/lib/ant-launcher.jar'))
-            workingDir(new File(hybrisExtractionDir.get(), 'hybris/bin/platform'))
+
+            classpath(new File(antHome, 'lib/ant-launcher.jar'))
+            workingDir(platformHome)
             main = 'org.apache.tools.ant.launch.Launcher'
             systemProperties taskProperties
-            systemProperty 'ant.home', new File(hybrisExtractionDir.get(), 'hybris/bin/platform/apache-ant-1.9.1')
+            systemProperty 'ant.home', antHome
             systemProperty 'input.template', 'develop'
             systemProperty 'maven.update.dbdrivers', 'false'
 
