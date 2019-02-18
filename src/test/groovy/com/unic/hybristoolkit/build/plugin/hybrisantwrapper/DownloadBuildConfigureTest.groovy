@@ -2,25 +2,21 @@ package com.unic.hybristoolkit.build.plugin.hybrisantwrapper
 
 import org.apache.groovy.util.Maps
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.ClassRule
+import org.junit.Rule
 import org.junit.rules.TemporaryFolder
-import spock.lang.Shared
 import spock.lang.Specification
-import spock.lang.Stepwise
 
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-@Stepwise
 class DownloadBuildConfigureTest extends Specification {
 
-    @Shared
-    @ClassRule
+    @Rule
     TemporaryFolder testProjectDir = new TemporaryFolder()
 
-    def setupSpec() {
+    def setup() {
         File buildFile = testProjectDir.newFile('build.gradle')
 
-        buildFile <<  """
+        buildFile << """
 plugins {
     id 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
 }
@@ -43,10 +39,10 @@ hybrisAntWrapper{
 
     def "configureHybris"() {
         given:
-        testProjectDir.newFolder("config","commonConfig","config")
-        testProjectDir.newFolder("config","subdir","specificConfig","config","sublevel")
-        testProjectDir.newFolder("config","subdir","irrelevantDir")
-        testProjectDir.newFolder("config","subdir","emptyConfig","config")
+        testProjectDir.newFolder("config", "commonConfig", "config")
+        testProjectDir.newFolder("config", "subdir", "specificConfig", "config", "sublevel")
+        testProjectDir.newFolder("config", "subdir", "irrelevantDir")
+        testProjectDir.newFolder("config", "subdir", "emptyConfig", "config")
         testProjectDir.newFile("config/commonConfig/config/local.properties") << "#commonConfig\n"
         testProjectDir.newFile("config/commonConfig/config/common.file") << "foobar\n"
         testProjectDir.newFile("config/subdir/specificConfig/config/local.properties") << "#specificConfig\n"
@@ -58,7 +54,7 @@ hybrisAntWrapper{
                 .withProjectDir(testProjectDir.root)
                 .withArguments('configureHybris')
                 .withPluginClasspath()
-                .withEnvironment(Maps.of("UNIC_TK_V2_CONFIG_PROFILES","commonConfig,subdir/specificConfig,subdir/emptyConfig,path/to/nonexisting/directory"))
+                .withEnvironment(Maps.of("UNIC_TK_V2_CONFIG_PROFILES", "commonConfig,subdir/specificConfig,subdir/emptyConfig,path/to/nonexisting/directory"))
                 .build()
 
         then:
