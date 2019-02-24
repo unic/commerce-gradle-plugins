@@ -28,14 +28,35 @@ class HybrisAntWrapperExtension {
     final Property<File> hybrisExtractionDir
 
     /**
+     * The path where configuration profiles can be found.
+     */
+    final Property<File> hybrisConfigurationDir
+
+    /**
      * The packages that shall be included when executing tests.
      */
     final Property<String> testpackages
+
+    /**
+     * The default configuration profile that should always be used
+     */
+    final Property<String> defaultConfigProfile
+
+    /**
+     * If the relevant configuration is stored in a sub-directory (or relative path) per profile, then set this value.
+     * Leave empty otherwise.
+     */
+    final Property<String> perConfigSubdirectory
 
     HybrisAntWrapperExtension(project) {
         testpackages = project.objects.property(String)
         testpackages.set("com.unic.*")
         hybrisExtractionDir = project.objects.property(File)
         hybrisExtractionDir.set(project.projectDir)
+        hybrisConfigurationDir = project.objects.property(File)
+        hybrisConfigurationDir.set(project.file('config'))
+        defaultConfigProfile = project.objects.property(String)
+        defaultConfigProfile.set("common")
+        perConfigSubdirectory = project.objects.property(String)
     }
 }

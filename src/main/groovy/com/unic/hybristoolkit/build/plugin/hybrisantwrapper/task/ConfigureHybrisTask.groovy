@@ -23,21 +23,35 @@ import org.gradle.api.tasks.TaskAction
 class ConfigureHybrisTask extends DefaultTask {
 // TODO add input, output or internal annotation
 
-    def defaultConfigProfile = 'common'
-    def configProfiles = [defaultConfigProfile]
+    def defaultConfigProfile
+    def perConfigSubdirectory
     def hybrisExtractionDir
+    def hybrisConfigurationDir
 
+    List<String> configProfiles = []
 
     ConfigureHybrisTask() {
         super()
-        inputs.dir new File(project.projectDir, 'config')
+        inputs.dir { hybrisConfigurationDir.get() }
+    }
 
-
+    @TaskAction
+    def run() {
+        // determine which profiles are active
+        configProfiles = [defaultConfigProfile.get()]
         if (System.getenv('UNIC_TK_V2_CONFIG_PROFILES')) {
             configProfiles.addAll(System.getenv('UNIC_TK_V2_CONFIG_PROFILES').split(","))
         } else if (System.getenv('CUSTOM_CONFIG_PROFILE')) {
             configProfiles.addAll(System.getenv('CUSTOM_CONFIG_PROFILE').split(","))
         }
+
+        // customize
+        configProfiles.each {
+            safeCopy(new File(hybrisConfigurationDir.get(),"${it}${slashPrefixedPerConfigSubdirectory()}"), new File(hybrisExtractionDir.get(), 'hybris'))
+        }
+
+        // merge local.properties
+        mergePropertiesWithFallback(configProfiles, new File(hybrisExtractionDir.get(), 'hybris/config/local.properties'))
     }
 
     def safeCopy(source, targetDir) {
@@ -53,26 +67,18 @@ class ConfigureHybrisTask extends DefaultTask {
         }
     }
 
+
     def mergePropertiesWithFallback(profiles, targetFile) {
-
-
         logger.quiet(">>> merging profiles ${profiles} into ${targetFile}")
 
         targetFile.text = profiles.collect {
-            def propSrc = project.file("config/${it}/config/local.properties")
+            def propSrc = new File(hybrisConfigurationDir.get(),"/${it}${slashPrefixedPerConfigSubdirectory()}/config/local.properties")
+            logger.quiet(">>> > file ${propSrc} ${propSrc.exists()?'found':'not found'}")
             propSrc.exists() ? propSrc.text : ''
         }.join("\n\n")
     }
 
-
-    @TaskAction
-    def run() {
-        // customize
-        configProfiles.each {
-            safeCopy(project.file("config/${it}"), new File(hybrisExtractionDir.get(), 'hybris'))
-        }
-
-        // merge local.properties
-        mergePropertiesWithFallback(configProfiles, new File(hybrisExtractionDir.get(), 'hybris/config/local.properties'))
+    def slashPrefixedPerConfigSubdirectory(){
+        perConfigSubdirectory.get() != null ? "${File.separator}${perConfigSubdirectory.get()}" : ''
     }
 }

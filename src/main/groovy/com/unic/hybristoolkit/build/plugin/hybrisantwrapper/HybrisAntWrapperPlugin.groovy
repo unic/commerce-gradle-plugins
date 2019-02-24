@@ -134,6 +134,10 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             group "Unic Hybris Toolkit"
             description "Merges local configuration and customizations with hybris installation."
             hybrisExtractionDir = extension.hybrisExtractionDir
+            hybrisConfigurationDir = extension.hybrisConfigurationDir
+            defaultConfigProfile = extension.defaultConfigProfile
+            perConfigSubdirectory = extension.perConfigSubdirectory
+
         }
 
         initialHybrisBuildTask.dependsOn(extractHybrisTask)
