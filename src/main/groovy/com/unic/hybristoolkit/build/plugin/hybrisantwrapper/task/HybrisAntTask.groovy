@@ -34,6 +34,8 @@ class HybrisAntTask extends DefaultTask {
     @TaskAction
     def runHybrisTask() {
         File platformHome = new File(hybrisExtractionDir.get(), 'hybris/bin/platform')
+        // TODO detect if no apache ant was found, thus expect hybris not to be in place.
+        // TODO add dependency on configureHybris for all ant tasks (what about InitialHybrisBuild?)
         File antHome = platformHome.listFiles(new PatternFilenameFilter("apache-ant.*")).first()
 
         project.javaexec {
