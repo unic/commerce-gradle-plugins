@@ -79,6 +79,6 @@ class ConfigureHybrisTask extends DefaultTask {
     }
 
     def slashPrefixedPerConfigSubdirectory(){
-        perConfigSubdirectory.get() != null ? "${File.separator}${perConfigSubdirectory.get()}" : ''
+        "${File.separator}${perConfigSubdirectory.get()}"
     }
 }

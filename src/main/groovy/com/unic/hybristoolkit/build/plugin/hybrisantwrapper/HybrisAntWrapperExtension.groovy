@@ -50,13 +50,14 @@ class HybrisAntWrapperExtension {
 
     HybrisAntWrapperExtension(project) {
         testpackages = project.objects.property(String)
-        testpackages.set("com.unic.*")
+        testpackages.set('com.unic.*')
         hybrisExtractionDir = project.objects.property(File)
         hybrisExtractionDir.set(project.projectDir)
         hybrisConfigurationDir = project.objects.property(File)
         hybrisConfigurationDir.set(project.file('config'))
         defaultConfigProfile = project.objects.property(String)
-        defaultConfigProfile.set("common")
+        defaultConfigProfile.set('common')
         perConfigSubdirectory = project.objects.property(String)
+        perConfigSubdirectory.set('')
     }
 }
