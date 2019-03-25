@@ -12,7 +12,7 @@ import org.gradle.api.provider.Property
 class HybrisAntWrapperExtension {
 
     /**
-     * The depencency string used to fetch the hybris zip.
+     * The GAV coordinates that should point to a hybris distribution zip.
      */
     def hybrisDependency = 'de.hybris.platform:hybris-commerce-suite:6.6.0.8@zip'
 
@@ -38,7 +38,7 @@ class HybrisAntWrapperExtension {
     final Property<String> testpackages
 
     /**
-     * The default configuration profile that should always be used
+     * The default configuration profile that should always be used.
      */
     final Property<String> defaultConfigProfile
 
