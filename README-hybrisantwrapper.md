@@ -56,4 +56,20 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 * hybrisYunitinit - Runs 'ant initialize' to initialize the hybris junit tenant.
 
 ## Configuration
-tbd.
+A developer can control which files from the `${hybrisConfigurationDir}` will be considered, when the plugin's task `configureHybris` is being executed to generate a local configuration.
+
+Do to so he or she must export an environment variable called `UNIC_TK_V2_CONFIG_PROFILES` that contains a comma-seperated list of paths relative to `${hybrisConfigurationDir}`. An example:
+
+    export UNIC_TK_V2_CONFIG_PROFILES=developerCommon,developers/some.user`
+    
+This list is prepended with the default configuration directory in `${defaultConfigProfile}`. Effectively this will cause the following directories to be considered:
+
+* **_${project.projectDir}/config/common_**
+* **_${project.projectDir}/config/developerCommon_**
+* **_${project.projectDir}/config/developers/some.user_**
+
+By setting the plugin's configuration property `${perConfigSubdirectory}` you can even define a subdirectory per list entry. Setting it to the value `conf` for example will lead to this list of effectively considered directories:  
+
+* **_${project.projectDir}/config/common/conf_**
+* **_${project.projectDir}/config/developerCommon/conf_**
+* **_${project.projectDir}/config/developers/some.user/conf_**
