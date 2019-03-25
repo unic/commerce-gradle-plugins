@@ -1,16 +1,36 @@
 # Hybris Toolkit: hybrisantwrapper
 
 ## Goal
-This plugin allows you to install a mysqldriver in an existing hybris installation.
+This plugin supplies tasks and extensions to help with analyzing the code quality. 
 
 ## Prerequsites
-This plugin requires access to a jysql driver jar in a Maven repository (e.g. Nexus). Als the _com.unic.hybristoolkit.build.plugin.hybrisantwrapper_ needs to be part of the current build, to determine where hybris was installed.
+An already configured and ready-to-test hybris instance is required to actually execute the included tasks. 
 
 ## Configuration
-* _mysqlDependency_ - The GAV coordinates that should point to a mysql driver jar.
+* _jacocoDependency_ - The GAV coordinates that should point to a jacoco agent jar.
 	<br/>type: String
-	<br/>default: `mysql:mysql-connector-java:5.1.18`
+	<br/>default: `org.jacoco:org.jacoco.agent:0.7.7.201606060606:runtime`
+
+* _sonarrunnerDependency_ - The GAV coordinates that should point to a sonarrunner agent jar.
+	<br/>type: String
+	<br/>default: `org.sonarsource.scanner.cli:sonar-scanner-cli:3.1.0.1141@jar`
 
 ## Tasks
+* sonar - Executes a sonar analysis.
 
-* installMysqlDriver - Installs a MySQL driver jar into hybris.
+## Extensions
+### Coverage reports
+The following targets are being enhanced, so they generate jacoco reports:
+
+| Task                      | Report file classifier|
+|---                        |---                    |
+| hybrisUnittests           | unittests             |
+| hybrisIntegrationtests    | integrationtests      |
+| hybrisWebUnittests        | webunittests          |
+| hybrisWebIntegrationtests | webintegrationtests   |
+| hybrisAlltests            | alltests              |
+
+The report file classifier is being used to generate a target file name for the jacoco execution report. The following pattern will be used: `${projectDir}/hybris/log/jacoco/jacoco-${classifier}.exec`
+
+## Restrictions / Notes
+Currently the jacoco related extensions are assuming, that hybris is installed in `${projectDir}/hybris`.
