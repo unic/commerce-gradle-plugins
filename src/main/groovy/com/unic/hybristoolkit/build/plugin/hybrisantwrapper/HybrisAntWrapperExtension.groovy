@@ -14,7 +14,7 @@ class HybrisAntWrapperExtension {
     /**
      * The GAV coordinates that should point to a hybris distribution zip.
      */
-    def hybrisDependency = 'de.hybris.platform:hybris-commerce-suite:6.6.0.8@zip'
+    def hybrisDependency = 'de.hybris.platform:sap-commerce-cloud:18.11@zip'
 
     /**
      * Inclusions and excluions for the extraction of the hybris zip.
