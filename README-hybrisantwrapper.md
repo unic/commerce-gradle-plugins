@@ -56,11 +56,12 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 * hybrisYunitinit - Runs 'ant initialize' to initialize the hybris junit tenant.
 
 ## Configuration
-A developer can control which files from the `${hybrisConfigurationDir}` will be considered, when the plugin's task `configureHybris` is being executed to generate a local configuration.
+When the task task `configureHybris` is called, a list of candidate directories is being calculated and then evaluated. From all these directories the contents will be copied into _**${hybrisExtractionDir}**_ in the given order, overwriting any existing files. The file **_local.properties_** is a special case, because the contents of each found copy are being appended into a single file int the target directory.
+ A developer can control which directories from the `${hybrisConfigurationDir}` will be considered as source directories.
 
-Do to so he or she must export an environment variable called `UNIC_TK_V2_CONFIG_PROFILES` that contains a comma-seperated list of paths relative to `${hybrisConfigurationDir}`. An example:
+To do so, he or she must export an environment variable called `UNIC_TK_V2_CONFIG_PROFILES`, that contains a comma-seperated list of paths relative to `${hybrisConfigurationDir}`. An example:
 
-    export UNIC_TK_V2_CONFIG_PROFILES=developerCommon,developers/some.user`
+    export UNIC_TK_V2_CONFIG_PROFILES=developerCommon,developers/some.user
     
 This list is prepended with the default configuration directory in `${defaultConfigProfile}`. Effectively this will cause the following directories to be considered:
 
@@ -72,4 +73,4 @@ By setting the plugin's configuration property `${perConfigSubdirectory}` you ca
 
 * **_${project.projectDir}/config/common/conf_**
 * **_${project.projectDir}/config/developerCommon/conf_**
-* **_${project.projectDir}/config/developers/some.user/conf_**
+* **_${project.projectDir}/config/developers/some.user/conf_** 
