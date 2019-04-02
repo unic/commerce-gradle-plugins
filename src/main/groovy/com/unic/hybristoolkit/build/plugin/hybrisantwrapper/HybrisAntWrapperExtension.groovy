@@ -38,6 +38,11 @@ class HybrisAntWrapperExtension {
     final Property<String> testpackages
 
     /**
+     * The packages that shall be excluded when executing tests.
+     */
+    final Property<String> testpackagesExcluded
+
+    /**
      * The default configuration profile that should always be used.
      */
     final Property<String> defaultConfigProfile
@@ -51,6 +56,8 @@ class HybrisAntWrapperExtension {
     HybrisAntWrapperExtension(project) {
         testpackages = project.objects.property(String)
         testpackages.set('com.unic.*')
+        testpackagesExcluded = project.objects.property(String)
+        testpackagesExcluded.set('')
         hybrisExtractionDir = project.objects.property(File)
         hybrisExtractionDir.set(project.projectDir)
         hybrisConfigurationDir = project.objects.property(File)

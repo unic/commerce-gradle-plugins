@@ -52,6 +52,7 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/unittests'
             systemProperty 'testclasses.suppress.junit.tenant', 'true'
             testpackages = extension.testpackages
+            testpackagesExcluded = extension.testpackagesExcluded
             arguments = 'unittests'
         }
 
@@ -65,6 +66,7 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webunittests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webunittests'
             testpackages = extension.testpackages
+            testpackagesExcluded = extension.testpackagesExcluded
             arguments = 'allwebtests'
         }
 
@@ -76,6 +78,7 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/integrationtests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/integrationtests'
             testpackages = extension.testpackages
+            testpackagesExcluded = extension.testpackagesExcluded
             arguments = 'integrationtests'
         }
 
@@ -88,6 +91,7 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/webintegrationtests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/webintegrationtests'
             testpackages = extension.testpackages
+            testpackagesExcluded = extension.testpackagesExcluded
             arguments = 'allwebtests'
         }
 
@@ -99,6 +103,7 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             systemProperty 'testclasses.junit.results.directory', '${HYBRIS_LOG_DIR}/junit/alltests'
             systemProperty 'testclasses.junit.temp.directory', '${HYBRIS_TEMP_DIR}/junit/alltests'
             testpackages = extension.testpackages
+            testpackagesExcluded = extension.testpackagesExcluded
             arguments = 'alltests'
         }
 
