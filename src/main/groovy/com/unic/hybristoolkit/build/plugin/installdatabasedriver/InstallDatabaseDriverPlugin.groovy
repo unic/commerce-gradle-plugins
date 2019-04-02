@@ -36,7 +36,9 @@ class InstallDatabaseDriverPlugin implements Plugin<Project> {
                 project.configurations.dbDriver.collect { it }
             }
             into { new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver') }
-            rename(".*", extension.jarName.get())
+            rename {
+                filename -> extension.jarName.get()
+            }
 
             doLast {
                 def hybrisDbDriverDir = new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver')
