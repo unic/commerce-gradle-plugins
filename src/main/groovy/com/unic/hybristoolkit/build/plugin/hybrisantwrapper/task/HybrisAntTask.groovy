@@ -18,6 +18,11 @@ class HybrisAntTask extends DefaultTask {
     final Property<String> testpackages = project.objects.property(String)
 
     /**
+     * If defined, the value of this property will be passed to ant as 'testclasses.packages.excluded' system property.
+     */
+    final Property<String> testpackagesExcluded = project.objects.property(String)
+
+    /**
      * Contains the path to the hybris installation (absolute or relative to projectDir).
      */
     final Property<File> hybrisExtractionDir = project.objects.property(File)
@@ -49,7 +54,16 @@ class HybrisAntTask extends DefaultTask {
             systemProperty 'maven.update.dbdrivers', 'false'
 
             if (testpackages.isPresent()) {
-                systemProperty 'testclasses.packages', testpackages.get()
+                systemProperty 'testclasses.packages', "${testpackages.get()}"
+            }
+            if (testpackagesExcluded.isPresent()) {
+                systemProperty 'testclasses.packages.excluded', "${testpackagesExcluded.get()}"
+
+                // Hybris sets the 'testclasses.packages.excluded' property by default. This overrides any values
+                // provided as system property, even though if it should be configurable that way.
+                // Remove the property from the project.properties as a workaround.
+                File configfile = new File(platformHome, 'project.properties')
+                configfile.text = configfile.text - ~/(?mi)\s+^testclasses.packages.excluded\s*=.*$/
             }
             args arguments
         }

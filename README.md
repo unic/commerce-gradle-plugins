@@ -54,8 +54,8 @@ This library contains the following plugins. Each plugin has it's own README, wh
 
 ### Testing the plugin(s)
 
-Once you've published the plugins into your local maven repository you need to tell the `hybris-toolkit-build`
-that you want to load the plugins from your local maven repository instead of the nexus.
+Once you've published the plugins into your local maven repository you need to tell the *consuming project*
+that you want to load the plugins from your local maven repository instead of nexus.
 
 You can do so by adjusting the `settings.gradle` in the `hybris-toolkit-build` repository:
 
@@ -63,14 +63,7 @@ You can do so by adjusting the `settings.gradle` in the `hybris-toolkit-build` r
 pluginManagement {
     repositories {
         mavenLocal()
-        maven {
-            credentials { 
-                username hybrisToolkitNexusUser
-                password hybrisToolkitNexusPassword
-            }
-            url "https://nexus.unic.com/nexus/content/repositories/unic-ecom-releases/"
-        }
-        gradlePluginPortal()
+        [...]
     }
 }
 
@@ -78,7 +71,7 @@ rootProject.name = 'hybris-toolkit'
 ```
 
 Make sure the `mavenLocal()` is the first line in the `repositories` section as otherwise you will run into
-ver strange errors.
+very strange errors.
 
 
 

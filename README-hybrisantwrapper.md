@@ -9,36 +9,41 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 
 ## Configuration
 * _hybrisDependency_ - The GAV coordinates that should point to a hybris distribution zip.
-	<br/>type: String
+	<br/>type: `String`
 	<br/>default: `de.hybris.platform:sap-commerce-cloud:18.11@zip`
 
 * _includeForExtractHybris_ - Includes to consider when extracting hybris.
-	<br/>type: List<String>
+	<br/>type: `List<String>`
 	<br/>default: `['hybris/**']`
 
 * _includeForExtractHybris_ - Excludes to consider when extracting hybris.
-	<br/>type: List<String>
+	<br/>type: `List<String>`
 	<br/>default: `[]`
 
 * _hybrisExtractionDir_ - Where to extract the hybris zip.
-	<br/>type: File
+	<br/>type: `File`
 	<br/>default: `${project.projectDir}`
 	
 * _hybrisConfigurationDir_ - The path where configuration profiles can be found.
-    <br/>type: String
+    <br/>type: `String`
 	<br/>default: `config`
 	
 * _testpackages_ - The packages that shall be included when executing tests.
-	<br/>type: List<String>
+	<br/>type: `String` or `List<String>`
 	<br/>default: `['com.unic.*']`
+
+* _testpackagesExcluded_ - The packages that shall be included when executing tests.
+	<br/>type: `String` or `List<String>`
+	<br/>default: <not set>	
+	
 	
 * _defaultConfigProfile_ - The default configuration profile that should always be used.
-    <br/>type: String
+    <br/>type: `String`
 	<br/>default: `common`
 	
-* _perConfigSubdirectory_ - If the relevant configuration is stored in a sub-directory (or relative path) per profile, 
-then set this value. Leave empty otherwise.
-    <br/>type: String
+
+* _perConfigSubdirectory_ - If the relevant configuration is stored in a sub-directory (or relative path) per profile, then set this value. Leave empty otherwise.
+    <br/>type: `String`
 	<br/>default: `` (empty String)
 
 ## Tasks

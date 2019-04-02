@@ -19,8 +19,6 @@ dependencies {
 	testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
 }
 
-group 'com.unic.hybristoolkit.build.plugin'
-
 gradlePlugin {
 	plugins {
 		databasedriver {
@@ -37,19 +35,15 @@ gradlePlugin {
 		}
 	}
 }
+
 publishing {
-	repositories {
-		maven {
-			credentials { username nexusUser(); password nexusPass() }
-			url "https://nexus.unic.com/nexus/repository/unic-ecom-releases/"
-		}
-	}
-}
-
-def nexusUser() {
-	project.hasProperty('unicNexusUser') ? unicNexusUser : System.getenv('NEXUS_USER')
-}
-
-def nexusPass() {
-	project.hasProperty('unicNexusPassword') ? unicNexusPassword : System.getenv('NEXUS_PASSWORD')
+    repositories {
+        maven {
+            credentials {
+                username project.hasProperty('unicNexusUser') ? unicNexusUser : System.getenv('NEXUS_USER')
+                password project.hasProperty('unicNexusPassword') ? unicNexusPassword : System.getenv('NEXUS_PASSWORD')
+            }
+            url version.endsWith('-SNAPSHOT') ? snapshotArtifactRepository : releaseArtifactRepository
+        }
+    }
 }

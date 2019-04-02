@@ -25,7 +25,7 @@ class ExtractHybrisTask extends DefaultTask {
     @Inject
     ExtractHybrisTask() {
         this.extension = project.extensions.hybrisAntWrapper
-        outputs.upToDateWhen { new File(extension.hybrisExtractionDir.get(), 'hybris').exists() }
+        outputs.upToDateWhen { new File(extension.hybrisExtractionDir.get(), 'hybris/bin/platform').exists() }
     }
 
     @TaskAction
