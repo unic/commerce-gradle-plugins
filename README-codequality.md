@@ -1,4 +1,4 @@
-# Hybris Toolkit: hybrisantwrapper
+# Hybris Toolkit: Code Quality
 
 ## Goal
 This plugin supplies tasks and extensions to help with analyzing the code quality. 

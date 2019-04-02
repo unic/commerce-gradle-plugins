@@ -2,43 +2,43 @@
  * Copyright (c) 2019 Unic AG
  */
 
-package com.unic.hybristoolkit.build.plugin.installmysqldriver
+package com.unic.hybristoolkit.build.plugin.databasedriver
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 
 /**
- * A plugin that downloads and installs a mysql-connector-java jar, which must be defined as dependency for the 'mysql' configuration.
+ * A plugin that downloads and installs a JDBC jar, which must be defined as dependency for the 'databaseDriver' configuration.
  */
-class InstallMysqlDriverPlugin implements Plugin<Project> {
+class DatabaseDriverPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def extension = project.extensions.create('installMysql', InstallMysqlDriverExtension)
+        def extension = project.extensions.create('databaseDriver', DatabaseDriverExtension, project)
 
         def hybrisAntWrapperExt = project.extensions.hybrisAntWrapper
 
-        def jarName = "mysql-connector-java.jar"
-
-        def installMysqlDriverTask = project.task("installMysqlDriver", type: Copy) {
-            description "Installs MySQL connection library into hybris."
+        def installDbDriver = project.task("installDatabaseDriver", type: Copy) {
+            description "Installs defined database connection library into hybris."
             group "Unic Hybris Toolkit"
 
             outputs.upToDateWhen {
-                new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), "hybris/bin/platform/lib/dbdriver/${jarName}").exists()
+                new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), "hybris/bin/platform/lib/dbdriver/${extension.jarName.get()}").exists()
             }
 
             doFirst {
                 def hybrisDbDriverDir = new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver')
-                println ">>> Copy mysql connection lib to $hybrisDbDriverDir ..."
+                println ">>> Copy jdbc connection lib to $hybrisDbDriverDir ..."
             }
 
             from {
-                project.configurations.mysql.collect { it }
+                project.configurations.dbDriver.collect { it }
             }
             into { new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver') }
-            rename(".*", jarName)
+            rename {
+                filename -> extension.jarName.get()
+            }
 
             doLast {
                 def hybrisDbDriverDir = new File(hybrisAntWrapperExt.hybrisExtractionDir.get(), 'hybris/bin/platform/lib/dbdriver')
@@ -47,14 +47,14 @@ class InstallMysqlDriverPlugin implements Plugin<Project> {
             }
         }
 
-        installMysqlDriverTask.dependsOn('extractHybris')
+        installDbDriver.dependsOn('extractHybris')
 
         project.afterEvaluate {
             project.configurations {
-                mysql
+                dbDriver
             }
             project.dependencies {
-                mysql extension.mysqlDependency
+                dbDriver extension.jdbcDependency
             }
         }
     }

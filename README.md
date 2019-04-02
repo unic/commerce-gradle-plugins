@@ -30,9 +30,48 @@ This library contains the following plugins. Each plugin has it's own README, wh
 	<br/>[read more...](README-codequality.md)
 
 
-* `com.unic.hybristtoolkit.build.plugin.installmysqldriver`
+* `com.unic.hybristtoolkit.build.plugin.databasedriver`
 	
-	Like the name says it installs the mysql driver into a hybris installation.
-	<br/>[read more...](README-installmysqldriver.md)
+	The databasedriver plugin installs a given JDBC connector jar into the SAP Commerce ecosystem.
+	<br/>[read more...](README-databasedriver.md)
+	
+	
+## Development
+
+*Status: Draft*
+
+### Prerequisites
+
+* Groovy SDK
+* Familiarity with Gradle
+* IDE (IntelliJ)
+
+### Preparing the plugin(s)
+
+* Adjust some code
+* Check the version of the plugin in `gradle.properties` as this will be the version in your local maven repository.
+* Build the project and publish it into your local maven repository like so: `./gradlew publishToMavenLocal`
+
+### Testing the plugin(s)
+
+Once you've published the plugins into your local maven repository you need to tell the *consuming project*
+that you want to load the plugins from your local maven repository instead of nexus.
+
+You can do so by adjusting the `settings.gradle` in the `hybris-toolkit-build` repository:
+
+```
+pluginManagement {
+    repositories {
+        mavenLocal()
+        [...]
+    }
+}
+
+rootProject.name = 'hybris-toolkit'
+```
+
+Make sure the `mavenLocal()` is the first line in the `repositories` section as otherwise you will run into
+very strange errors.
+
 
 
