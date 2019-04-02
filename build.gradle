@@ -3,37 +3,37 @@
  */
 
 plugins {
-    id 'java-gradle-plugin'
-    id 'maven-publish'
-    id 'groovy'
+	id 'java-gradle-plugin'
+	id 'maven-publish'
+	id 'groovy'
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    implementation 'com.google.guava:guava:27.0.1-jre'
-    testImplementation gradleTestKit()
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
+	implementation 'com.google.guava:guava:27.0.1-jre'
+	testImplementation gradleTestKit()
+	testImplementation 'junit:junit:4.12'
+	testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
 }
 
 gradlePlugin {
-    plugins {
-        installmysqldriver {
-            id = 'com.unic.hybristoolkit.build.plugin.installmysqldriver'
-            implementationClass = 'com.unic.hybristoolkit.build.plugin.installmysqldriver.InstallMysqlDriverPlugin'
-        }
-        hybrisantwrapper {
-            id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
-            implementationClass = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperPlugin'
-        }
-        codequality {
-            id = 'com.unic.hybristoolkit.build.plugin.codequality'
-            implementationClass = 'com.unic.hybristoolkit.build.plugin.codequality.CodeQualityPlugin'
-        }
-    }
+	plugins {
+		databasedriver {
+			id = 'com.unic.hybristoolkit.build.plugin.databasedriver'
+			implementationClass = 'com.unic.hybristoolkit.build.plugin.databasedriver.DatabaseDriverPlugin'
+		}
+		hybrisantwrapper {
+			id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
+			implementationClass = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperPlugin'
+		}
+		codequality {
+			id = 'com.unic.hybristoolkit.build.plugin.codequality'
+			implementationClass = 'com.unic.hybristoolkit.build.plugin.codequality.CodeQualityPlugin'
+		}
+	}
 }
 
 publishing {
