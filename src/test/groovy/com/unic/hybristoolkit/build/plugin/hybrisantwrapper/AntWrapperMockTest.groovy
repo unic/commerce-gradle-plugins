@@ -38,7 +38,7 @@ hybrisAntWrapper{
 """
         File platformDir = testProjectDir.newFolder("hybris", "bin", "platform")
         testProjectDir.newFile("hybris/bin/platform/build.xml") << new File(this.getClass().getResource("/build-hybrismock.xml").toURI()).text
-
+        testProjectDir.newFile("hybris/bin/platform/project.properties")
         testProjectDir.newFolder("hybris","bin","platform","resources","ant")
         testProjectDir.newFile("hybris/bin/platform/resources/ant/testing.xml")
 
