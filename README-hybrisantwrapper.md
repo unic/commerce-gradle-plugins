@@ -1,9 +1,10 @@
-# Hybris Toolkit: hybrisantwrapper
+# Hybris Toolkit: Hybris Ant Wrapper
 
 ## Goal
-This plugin aims at providing the most important tasks for setting up, configuring and building a hybris installation, in order to get it running locally or in a CI environment and package it for deployment.
+This plugin aims at providing the most important tasks for setting up, configuring and building a hybris installation, 
+in order to get it running locally or in a CI environment and package it for deployment.
 
-## Prerequsites
+## Prerequisites
 This plugin requires access to a hybris distribution zip in a Maven repository (e.g. Nexus).
 
 ## Configuration
@@ -35,7 +36,8 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
     <br/>type: String
 	<br/>default: `common`
 	
-* _perConfigSubdirectory_ - If the relevant configuration is stored in a sub-directory (or relative path) per profile, then set this value. Leave empty otherwise.
+* _perConfigSubdirectory_ - If the relevant configuration is stored in a sub-directory (or relative path) per profile, 
+then set this value. Leave empty otherwise.
     <br/>type: String
 	<br/>default: `` (empty String)
 
@@ -56,20 +58,26 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 * hybrisYunitinit - Runs 'ant initialize' to initialize the hybris junit tenant.
 
 ## Configuration
-When the task task `configureHybris` is called, a list of candidate directories is being calculated and then evaluated. From all these directories the contents will be copied into _**${hybrisExtractionDir}**_ in the given order, overwriting any existing files. The file **_local.properties_** is a special case, because the contents of each found copy are being appended into a single file int the target directory.
+When the task task `configureHybris` is called, a list of candidate directories is being calculated and then evaluated. 
+From all these directories the contents will be copied into _**${hybrisExtractionDir}**_ in the given order, overwriting
+ any existing files. The file **_local.properties_** is a special case, because the contents of each found copy are being
+  appended into a single file int the target directory.
  A developer can control which directories from the `${hybrisConfigurationDir}` will be considered as source directories.
 
-To do so, he or she must export an environment variable called `UNIC_TK_V2_CONFIG_PROFILES`, that contains a comma-seperated list of paths relative to `${hybrisConfigurationDir}`. An example:
+To do so, he or she must export an environment variable called `UNIC_TK_V2_CONFIG_PROFILES`, that contains a comma-seperated
+ list of paths relative to `${hybrisConfigurationDir}`. An example:
 
     export UNIC_TK_V2_CONFIG_PROFILES=developerCommon,developers/some.user
     
-This list is prepended with the default configuration directory in `${defaultConfigProfile}`. Effectively this will cause the following directories to be considered:
+This list is prepended with the default configuration directory in `${defaultConfigProfile}`. Effectively this will cause the
+ following directories to be considered:
 
 * **_${project.projectDir}/config/common_**
 * **_${project.projectDir}/config/developerCommon_**
 * **_${project.projectDir}/config/developers/some.user_**
 
-By setting the plugin's configuration property `${perConfigSubdirectory}` you can even define a subdirectory per list entry. Setting it to the value `conf` for example will lead to this list of effectively considered directories:  
+By setting the plugin's configuration property `${perConfigSubdirectory}` you can even define a subdirectory per list entry. 
+Setting it to the value `conf` for example will lead to this list of effectively considered directories:  
 
 * **_${project.projectDir}/config/common/conf_**
 * **_${project.projectDir}/config/developerCommon/conf_**

@@ -2,20 +2,20 @@
  * Copyright (c) 2019 Unic AG
  */
 
-package com.unic.hybristoolkit.build.plugin.installdatabasedriver
+package com.unic.hybristoolkit.build.plugin.databasedriver
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 
 /**
- * A plugin that downloads and installs a JDBC jar, which must be defined as dependency for the 'dbDriver' configuration.
+ * A plugin that downloads and installs a JDBC jar, which must be defined as dependency for the 'databaseDriver' configuration.
  */
-class InstallDatabaseDriverPlugin implements Plugin<Project> {
+class DatabaseDriverPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def extension = project.extensions.create('installDbDriver', InstallDatabaseDriverExtension, project)
+        def extension = project.extensions.create('databaseDriver', DatabaseDriverExtension, project)
 
         def hybrisAntWrapperExt = project.extensions.hybrisAntWrapper
 

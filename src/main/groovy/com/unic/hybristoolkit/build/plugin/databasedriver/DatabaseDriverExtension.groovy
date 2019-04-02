@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2019 Unic AG
  */
-package com.unic.hybristoolkit.build.plugin.installdatabasedriver
+package com.unic.hybristoolkit.build.plugin.databasedriver
 
 import org.gradle.api.provider.Property
 
 /**
- * Extension class for the InstallDatabaseDriver extension
+ * Extension class for the DatabaseDriver extension
  */
-class InstallDatabaseDriverExtension {
+class DatabaseDriverExtension {
 	/**
 	 * The dependency string used to fetch the jdbc jar
 	 */
@@ -19,7 +19,7 @@ class InstallDatabaseDriverExtension {
 	 */
 	final Property<String> jarName
 
-	InstallDatabaseDriverExtension(project) {
+	DatabaseDriverExtension(project) {
 		jarName = project.objects.property(String)
 	}
 }

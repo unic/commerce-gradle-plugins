@@ -24,8 +24,8 @@ group 'com.unic.hybristoolkit.build.plugin'
 gradlePlugin {
 	plugins {
 		installdatabasedriver {
-			id = 'com.unic.hybristoolkit.build.plugin.installdatabasedriver'
-			implementationClass = 'com.unic.hybristoolkit.build.plugin.installdatabasedriver.InstallDatabaseDriverPlugin'
+			id = 'com.unic.hybristoolkit.build.plugin.databasedriver'
+			implementationClass = 'com.unic.hybristoolkit.build.plugin.databasedriver.DatabaseDriverPlugin'
 		}
 		hybrisantwrapper {
 			id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
