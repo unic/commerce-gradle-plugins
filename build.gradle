@@ -6,7 +6,6 @@ plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
     id 'groovy'
-    id 'net.researchgate.release' version '2.6.0'
 }
 
 repositories {
@@ -46,30 +45,5 @@ publishing {
             }
             url version.endsWith('-SNAPSHOT') ? snapshotArtifactRepository : releaseArtifactRepository
         }
-    }
-}
-
-/**
- * RELEASE Configuration
- *
- * Documentation: https://github.com/researchgate/gradle-release
- */
-
-import java.util.regex.Matcher
-
-release {
-    // defult versioning is for PATCH version, use -PreleaseMode=MAJOR or -PreleaseMode=MINOR to select different versioning
-    // When executed with -Prelease.useAutomaticVersion=true versions are updated automaticly
-    versionPatterns = [
-            // Example: 2.0.3-SNAPSHOT > 2.0.3 > 3.0.0-SNAPSHOT
-            /(\d+)\.(\d+\.\d+(-.*)?)$/: { Matcher m, Project p -> m.replaceAll("${(m[0][1] as int) + 1}.0.0${m[0][3] != null ? m[0][3] : ''}") }
-    ]
-    tagTemplate = 'v${version}'
-    scmAdapters = [
-            net.researchgate.release.GitAdapter
-    ]
-    buildTasks = ['publish']
-    git {
-        // requireBranch = /(release|hotfix)(\/.+)?/
     }
 }
