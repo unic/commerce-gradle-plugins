@@ -26,6 +26,7 @@ class CodeQualityExtension {
 
 
     CodeQualityExtension(project) {
+
         this.project = project
         sonarClasspath = project.objects.property(FileCollection)
     }
