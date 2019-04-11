@@ -78,8 +78,13 @@ class CodeQualityPlugin implements Plugin<Project> {
 
 
     def enableJacoco(classifier) {
-        println("BEWARE: Appending Jacoco configuration for integration tests to 'standalone.javaoptions'!")
-        def args = "-DjacocoConf=start -javaagent:${jacocoConfiguration.singleFile}=destfile=${projectDir}/hybris/log/jacoco/jacoco-${classifier}.exec,append=true,excludes=*Test -DjacocoConf=end"
+        println("BEWARE: Appending Jacoco configuration for ${classifier} tests to 'standalone.javaoptions'!")
+        def destdir = new File("${projectDir}/hybris/log/jacoco/")
+        def destfile = destdir.toPath().resolve("jacoco-${classifier}.exec").toFile()
+
+        destdir.listFiles({d, f-> f ==~ /jacoco-.*\.exec/ } as FilenameFilter).each({f ->  println("BEWARE: Removing existing Jacoco report ${f}!"); f.delete()})
+
+        def args = "-DjacocoConf=start -javaagent:${jacocoConfiguration.singleFile}=destfile=${destfile},append=true,excludes=*Test -DjacocoConf=end"
 
         getConfigFile().text = getConfigFile().text.replaceAll(/(?m)^(standalone\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$/, '$1 ' + args)
     }
