@@ -30,6 +30,12 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             hybrisExtractionDir = extension.hybrisExtractionDir
         }
 
+        project.tasks.create('hybrisCustomize', HybrisAntTask) {
+            group 'Unic Hybris Toolkit - Wrapped Tasks'
+            description "Runs 'ant customize' target."
+            arguments = 'customize'
+        }
+
         project.tasks.create('hybrisAll', HybrisAntTask) {
             group 'Unic Hybris Toolkit - Wrapped Tasks'
             description "Runs 'ant all' target."
