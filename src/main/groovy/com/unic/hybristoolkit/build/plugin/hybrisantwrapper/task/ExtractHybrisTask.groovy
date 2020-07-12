@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 class ExtractHybrisTask extends DefaultTask {
 
-    final Property<File> hybrisZip = project.objects.property(File)
+    final Property<Set> hybrisDependencies = project.objects.property(Set)
 
     final HybrisAntWrapperExtension extension
 
@@ -31,29 +31,30 @@ class ExtractHybrisTask extends DefaultTask {
     @TaskAction
     def run() {
         // TODO check for the existence of project.configurations.hybris and log a hint if it's missing.
+        hybrisDependencies.get().each { File dependency ->
+            def copyDetails = []
+            logger.quiet(">>> Extracting {} to {}", dependency.name, extension.hybrisExtractionDir.get().absolutePath)
+            logger.quiet(">>> \tIncluding {}", extension.includeForExtractHybris)
+            logger.quiet(">>> \tExcluding {}", extension.excludeForExtractHybris)
 
-        logger.quiet(">>> Extracting {} to {}", hybrisZip.get().name, extension.hybrisExtractionDir.get().absolutePath)
-        logger.quiet(">>> \tIncluding {}", extension.includeForExtractHybris)
-        logger.quiet(">>> \tExcluding {}", extension.excludeForExtractHybris)
-        def copyDetails = []
-        project.copy {
-            from { // use of closure defers evaluation until execution time
-                project.zipTree(hybrisZip.get())
+            project.copy {
+                from { // use of closure defers evaluation until execution time
+                    project.zipTree(dependency)
+                }
+                include extension.includeForExtractHybris
+                exclude extension.excludeForExtractHybris
+                into extension.hybrisExtractionDir.get()
+
+                eachFile { copyDetails << it }
             }
-            include extension.includeForExtractHybris
-            exclude extension.excludeForExtractHybris
-            into extension.hybrisExtractionDir.get()
 
-            eachFile { copyDetails << it }
-        }
-
-        // restore file dates, see https://issues.gradle.org/browse/GRADLE-2698
-        copyDetails.each { FileCopyDetails details ->
-            def target = project.file(details.path)
-            if (target.exists()) {
-                target.setLastModified(details.lastModified)
+            // restore file dates, see https://issues.gradle.org/browse/GRADLE-2698
+            copyDetails.each { FileCopyDetails details ->
+                def target = project.file(details.path)
+                if (target.exists()) {
+                    target.setLastModified(details.lastModified)
+                }
             }
         }
-
     }
 }
