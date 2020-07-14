@@ -7,7 +7,7 @@ package com.unic.hybristoolkit.build.plugin.hybrisantwrapper.task
 import com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCopyDetails
-import org.gradle.api.provider.Property
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.TaskAction
 
 import javax.inject.Inject
@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 class ExtractHybrisTask extends DefaultTask {
 
-    final Property<Set> hybrisDependencies = project.objects.property(Set)
+    final SetProperty hybrisDependencies = project.objects.setProperty(File.class)
 
     final HybrisAntWrapperExtension extension
 
