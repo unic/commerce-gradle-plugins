@@ -12,11 +12,15 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 	<br/>type: `String`
 	<br/>default: `de.hybris.platform:sap-commerce-cloud:18.11@zip`
 
+* _integrationDependencies_ - A list with GAV coordinates to additional hybris integration dependencies.
+	<br/>type: `List`
+	<br/>default: `[]`
+
 * _includeForExtractHybris_ - Includes to consider when extracting hybris.
 	<br/>type: `List<String>`
 	<br/>default: `['hybris/**']`
 
-* _includeForExtractHybris_ - Excludes to consider when extracting hybris.
+* _excludeForExtractHybris_ - Excludes to consider when extracting hybris.
 	<br/>type: `List<String>`
 	<br/>default: `[]`
 
@@ -48,7 +52,7 @@ This plugin requires access to a hybris distribution zip in a Maven repository (
 
 ## Tasks
 
-* extractHybris - Extracts hybris to the specified target
+* extractHybris - Extracts hybris and all defined integration dependencies to the specified target
 * initialHybrisBuild - If no config folder exists yet this task runs an initial build to create all necessary folders.
 * configureHybris - Merges local configuration and customizations with hybris installation.
 * hybrisAll - Runs 'ant all' target.

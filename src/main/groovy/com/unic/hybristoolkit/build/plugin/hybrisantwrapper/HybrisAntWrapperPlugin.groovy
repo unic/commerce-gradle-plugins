@@ -148,7 +148,6 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             hybrisConfigurationDir = extension.hybrisConfigurationDir
             defaultConfigProfile = extension.defaultConfigProfile
             perConfigSubdirectory = extension.perConfigSubdirectory
-
         }
 
         initialHybrisBuildTask.dependsOn(extractHybrisTask)
@@ -161,7 +160,12 @@ class HybrisAntWrapperPlugin implements Plugin<Project> {
             project.dependencies {
                 hybris extension.hybrisDependency
             }
-            project.tasks.extractHybris.hybrisZip.set(project.configurations.hybris.singleFile)
+
+            extension.integrationDependencies.each {
+                project.dependencies.add("hybris", it)
+            }
+
+            project.tasks.extractHybris.hybrisDependencies.set(project.configurations.hybris.files)
         }
     }
 

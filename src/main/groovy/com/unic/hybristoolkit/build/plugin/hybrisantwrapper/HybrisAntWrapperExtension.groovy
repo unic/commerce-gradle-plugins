@@ -17,7 +17,12 @@ class HybrisAntWrapperExtension {
     def hybrisDependency = 'de.hybris.platform:sap-commerce-cloud:18.11@zip'
 
     /**
-     * Inclusions and excluions for the extraction of the hybris zip.
+     * A list of GAV coordinates that point to additional integrations that should be installed in the system.
+     */
+    List integrationDependencies = []
+
+    /**
+     * Inclusions and exclusions for the extraction of the hybris zip.
      */
     List includeForExtractHybris = ['hybris/**']
     List excludeForExtractHybris = []
