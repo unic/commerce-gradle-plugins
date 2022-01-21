@@ -14,25 +14,39 @@ import org.gradle.api.Project
  */
 class CodeQualityPlugin implements Plugin<Project> {
 
+    final String JACOCO_PREFIX = 'jacoco'
     def extension
     def jacocoConfiguration
     def jacocoCliConfiguration
     def sonarrunnerConfiguration
-    def projectDir
     def hybrisDir
 
     @Override
     void apply(Project project) {
 
         extension = project.extensions.create("codeQuality", CodeQualityExtension, project)
-        projectDir = project.projectDir
+        this.hybrisDir = new File("${project.projectDir}/hybris")
 
-        extension.jacocoTargets.each { target ->
-            project.tasks.named(target) {
-                doFirst { enableJacoco(target) }
-                doLast { disableJacoco() }
+
+        project.tasks.addRule("Pattern: jacoco<task>") { String taskName ->
+            if (taskName.startsWith(JACOCO_PREFIX)) {
+                println("### APPLYING INSTRUMENTATION")
+                def targetTask = (taskName - JACOCO_PREFIX).uncapitalize()
+                project.task(taskName) {
+                    doLast { enableJacoco(taskName) }
+                    finalizedBy targetTask
+                }
+
+                def cleanupTask = project.task(taskName+'Cleanup') {
+                    doLast { disableJacoco() }
+                }
+
+                project.tasks.named(targetTask) {
+                    finalizedBy cleanupTask
+                }
             }
         }
+
 
         project.tasks.create('sonar', SonarRunner) {
             sonarClasspath = extension.sonarClasspath
@@ -43,7 +57,7 @@ class CodeQualityPlugin implements Plugin<Project> {
         project.tasks.create('jacocoReport', JacocoReport) {
             jacocoCliClasspath = extension.jacocoCliClasspath
             jacocoCliWorkingDir = project.projectDir
-            this.hybrisDir = new File("${project.projectDir}/hybris")
+            hybrisDir = this.hybrisDir
         }
 
         project.afterEvaluate {
@@ -67,7 +81,6 @@ class CodeQualityPlugin implements Plugin<Project> {
             extension.jacocoCliClasspath.set(project.files(jacocoCliConfiguration.singleFile))
         }
     }
-
 
     def enableJacoco(classifier) {
         println("BEWARE: Appending Jacoco configuration for ${classifier} tests to 'standalone.javaoptions'!")
