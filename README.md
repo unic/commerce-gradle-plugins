@@ -1,29 +1,52 @@
-# Hybris Toolkit: Plugins
+# Unic commerce-gradle-plugins: Code Quality
 
-This project contains gradle plugins which are meant to be used in other projects, which are set up according to the guidelines described in the [SAP Commerce Cookbook](https://projects.unic.com/display/DCOM/SAP+Commerce+Cookbook).
+## Goal
 
-## Notation
+This plugin supplies tasks and extensions to help with analyzing the code quality.
 
-_hybris_ and _SAP Commerce_ are being treated as equivalent terms.
+## Prerequsites
 
-## Contents
+An already configured and ready-to-test SAP Commerce instance is required to actually execute the included tasks.
 
-This library contains the following plugins. Each plugin has it's own README, which contains more information.
+## Configuration
 
-- `com.unic.hybristtoolkit.build.plugin.codequality`
+- _jacocoDependency_ - The GAV coordinates that should point to a jacoco agent jar.
+  <br/>type: String
+  <br/>default: `org.jacoco:org.jacoco.agent:0.8.7:runtime`
 
-  The codequality plugin wraps the existing test-related tasks to enable us to gather Jacoco execution statistics. It also provides a task to execute a sonar analysis.
-  <br/>[read more...](README-codequality.md)
+- _jacocoCliDependency_ - The GAV coordinates that should point to a jacoco cli jar.
+  <br/>type: String
+  <br/>default: `org.jacoco:org.jacoco.cli:0.8.7:nodeps@jar`
 
-- **_< DEPRECATED >_** `com.unic.hybristtoolkit.build.plugin.hybrisantwrapper`
+- _sonarrunnerDependency_ - The GAV coordinates that should point to a sonarrunner agent jar.
+  <br/>type: String
+  <br/>default: `org.sonarsource.scanner.cli:sonar-scanner-cli:4.6.2.2472@jar`
 
-  This is the heart of this project. It basically wraps the ant targets of the hybris buildsystem in gradle and decorates them with some pixiedust. It also helps with downloading, installing and configuring a hybris installation.
-  <br/>[read more...](README-hybrisantwrapper.md)
+- _jacocoTargets_ - The tasks to enhance by enabling jacoco instrumentation.
+  <br/>type: String[]
+  <br/>default: `['cloudTests','cloudWebTests']`
 
-- **_< DEPRECATED >_** `com.unic.hybristtoolkit.build.plugin.databasedriver`
+## Tasks
 
-  The databasedriver plugin installs a given JDBC connector jar into the SAP Commerce ecosystem.
-  <br/>[read more...](README-databasedriver.md)
+- sonar - Executes a sonar analysis.
+- jacocoReport - Generates a XML report of all available jacoco .exec files.
+
+## Extensions
+
+### Coverage data
+
+To generate coverage data you need to configure the tasks that need to be enhanced in order to enable instrumentalization by the jacoco agent. You can do this by setting the jacocoTargets configuration value.
+
+The task name is being used to generate a target file name for the jacoco execution data. The following pattern will be used: `${projectDir}/hybris/log/jacoco/jacoco-${classifier}.exec`.
+
+### Coverage reports
+
+In order for sonar to be able to pick up the reports, you may have to compile the jacoco execution data into an XML report. Call the `jacocoReport` target to do so before executing the `sonar` task.
+
+## Restrictions / Notes
+
+Currently the jacoco related extensions are assuming that hybris is installed in `${projectDir}/hybris`.
+
 
 ## Development
 

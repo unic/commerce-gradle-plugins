@@ -21,17 +21,9 @@ dependencies {
 
 gradlePlugin {
 	plugins {
-		databasedriver {
-			id = 'com.unic.hybristoolkit.build.plugin.databasedriver'
-			implementationClass = 'com.unic.hybristoolkit.build.plugin.databasedriver.DatabaseDriverPlugin'
-		}
-		hybrisantwrapper {
-			id = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper'
-			implementationClass = 'com.unic.hybristoolkit.build.plugin.hybrisantwrapper.HybrisAntWrapperPlugin'
-		}
 		codequality {
-			id = 'com.unic.hybristoolkit.build.plugin.codequality'
-			implementationClass = 'com.unic.hybristoolkit.build.plugin.codequality.CodeQualityPlugin'
+			id = 'com.unic.commercegradleplugin.codequality'
+			implementationClass = 'com.unic.commercegradleplugin.codequality.CodeQualityPlugin'
 		}
 	}
 }
