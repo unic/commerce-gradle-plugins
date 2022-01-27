@@ -1,6 +1,6 @@
 package com.unic.commercegradleplugin.codequality
 
-import org.gradle.api.Task
+
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -9,13 +9,13 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
-
 class JacocoRuleTest extends Specification {
 
     @Rule
     private TemporaryFolder testProjectDir = new TemporaryFolder()
 
     private File configDir;
+
     void setup() {
         File buildFile = testProjectDir.newFile('build.gradle')
 
@@ -38,7 +38,7 @@ tasks.register('propsEcho') {
     @Test
     void antRuleDecoration() {
         given:
-        File localprops = new File(configDir,'local.properties')
+        File localprops = new File(configDir, 'local.properties')
         localprops.createNewFile()
 
         when:
@@ -53,7 +53,7 @@ tasks.register('propsEcho') {
     @Test
     void localpropsEmpty() {
         given:
-        File localprops = new File(configDir,'local.properties')
+        File localprops = new File(configDir, 'local.properties')
         localprops.text = ""
 
         when:
@@ -69,7 +69,7 @@ tasks.register('propsEcho') {
     @Test
     void existingLocalProps() {
         given:
-        File localprops = new File(configDir,'local.properties')
+        File localprops = new File(configDir, 'local.properties')
         String text = """
 foo=bar
 standalone.javaoptions=-Xmx42g

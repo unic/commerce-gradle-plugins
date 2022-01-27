@@ -10,7 +10,10 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
 
 /**
- * Wraps a javaexec to execute sonar. Use this in cases where you can's use the official sonar runner:
+ * Runs the Sonar Scanner on the project directory.
+ * See: https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
+ *
+ * Use this in cases where you can's use the official sonar runner:
  * https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle
  */
 class SonarRunner extends DefaultTask {

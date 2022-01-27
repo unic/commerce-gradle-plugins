@@ -24,14 +24,11 @@ class CodeQualityExtension {
      * The depencency string used to fetch the jacoco cli jar.
      */
     def jacocoCliDependency = 'org.jacoco:org.jacoco.cli:0.8.7:nodeps@jar'
+
     /**
      * The depencency string used to fetch the sonarrunner jar.
      */
     def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:4.6.2.2472@jar'
-    /**
-     * The targets that should be 'enhanced' with the Jacoco agent.
-     */
-    def jacocoTargets = ['cloudTests', 'cloudWebTests']
 
 
     CodeQualityExtension(project) {
@@ -51,7 +48,4 @@ class CodeQualityExtension {
         this.sonarDependency = sonarDependency
     }
 
-    void setJacocoTargets(targets) {
-        this.jacocoTargets = targets
-    }
 }

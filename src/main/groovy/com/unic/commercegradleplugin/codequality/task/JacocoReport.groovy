@@ -4,14 +4,14 @@
 
 package com.unic.commercegradleplugin.codequality.task
 
+import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.TaskAction
-import groovy.io.FileType
 
 /**
- * Wraps a javaexec to execute jacoco-cli to generate an XML report from exec files.
+ * Finds all .exec files in the hybris jacoco output dir and executes jacoco-cli to generate an XML report from those files.
  */
 class JacocoReport extends DefaultTask {
 
@@ -23,7 +23,7 @@ class JacocoReport extends DefaultTask {
     void sonarrunner() {
         File customCodeDir = new File(hybrisDir, "/bin/custom")
         def classDirs = []
-        customCodeDir.eachFileRecurse (FileType.DIRECTORIES) { dir ->
+        customCodeDir.eachFileRecurse(FileType.DIRECTORIES) { dir ->
             if (dir.name == 'classes') {
                 classDirs << "--classfiles=${dir}"
             }
@@ -31,7 +31,7 @@ class JacocoReport extends DefaultTask {
 
         File jacocoLogDir = new File(hybrisDir, "/log/jacoco")
         def execFiles = []
-        jacocoLogDir.eachFileRecurse (FileType.FILES) { file ->
+        jacocoLogDir.eachFileRecurse(FileType.FILES) { file ->
             if (file.name.endsWith('.exec')) {
                 execFiles << file
             }
