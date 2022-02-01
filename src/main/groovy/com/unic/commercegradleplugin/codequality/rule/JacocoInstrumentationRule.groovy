@@ -26,7 +26,6 @@ class JacocoInstrumentationRule implements Rule {
     @Override
     void apply(String taskName) {
         if (taskName.startsWith(PREFIX)) {
-            println("### APPLYING INSTRUMENTATION")
             String targetTask = (taskName - PREFIX).uncapitalize()
             project.task(taskName) {
                 doLast { enableJacoco(targetTask) }
@@ -49,7 +48,7 @@ class JacocoInstrumentationRule implements Rule {
         File destdir = new File(hybrisDir, "log/jacoco/")
         File destfile = destdir.toPath().resolve("jacoco-${classifier}.exec").toFile()
         println("Jacoco report output file: ${destfile}")
-        GString args = "-DjacocoConf=start -javaagent:${jacocoJar}=destfile=${destfile},append=true,excludes=*Test -DjacocoConf=end"
+        GString args = "-DjacocoConf=start -javaagent:${jacocoJar.get()}=destfile=${destfile},append=true,excludes=*Test -DjacocoConf=end"
 
         String config = getConfigFile().text
         if ((~/(?ms).*^standalone\.javaoptions=.*?$.*/).matcher(config).matches()) {

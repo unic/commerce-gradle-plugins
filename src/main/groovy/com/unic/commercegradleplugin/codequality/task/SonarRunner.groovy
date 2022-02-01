@@ -7,6 +7,7 @@ package com.unic.commercegradleplugin.codequality.task
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -18,9 +19,13 @@ import org.gradle.api.tasks.TaskAction
  */
 class SonarRunner extends DefaultTask {
 
+    @Input
     final Property<FileCollection> sonarClasspath = project.objects.property(FileCollection)
+    @Input
     def sonarWorkingDir
+    @Input
     def sonarProjectDir
+    @Input
     def sonarProperties = new Properties()
 
     @TaskAction

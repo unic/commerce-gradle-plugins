@@ -1,3 +1,4 @@
+/* groovylint-disable JavaIoPackageAccess */
 /*
  * Copyright (c) 2022 Unic AG
  */
@@ -8,6 +9,7 @@ import groovy.io.FileType
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.FileCollection
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -15,22 +17,28 @@ import org.gradle.api.tasks.TaskAction
  */
 class JacocoReport extends DefaultTask {
 
+    @Input
     final Property<FileCollection> jacocoCliClasspath = project.objects.property(FileCollection)
+    @Input
+    final Property<String> customCodePath = project.objects.property(String)
+    @Input
     def jacocoCliWorkingDir
-    File hybrisDir = new File("${project.projectDir}/hybris")
+    @Input
+    def hybrisDir
 
     @TaskAction
     void sonarrunner() {
-        File customCodeDir = new File(hybrisDir, "/bin/custom")
-        def classDirs = []
+        File customCodeDir = new File(hybrisDir, customCodePath.get())
+        List<String> classDirs = []
         customCodeDir.eachFileRecurse(FileType.DIRECTORIES) { dir ->
             if (dir.name == 'classes') {
                 classDirs << "--classfiles=${dir}"
             }
         }
 
-        File jacocoLogDir = new File(hybrisDir, "/log/jacoco")
-        def execFiles = []
+        File jacocoLogDir = new File(hybrisDir, '/log/jacoco')
+        List<File> execFiles = []
+
         jacocoLogDir.eachFileRecurse(FileType.FILES) { file ->
             if (file.name.endsWith('.exec')) {
                 execFiles << file

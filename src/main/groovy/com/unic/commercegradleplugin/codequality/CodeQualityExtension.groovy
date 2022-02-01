@@ -30,10 +30,16 @@ class CodeQualityExtension {
      */
     def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:4.6.2.2472@jar'
 
+    /**
+    * The location of your custom SAP Commerce extensions relative to the hybris directory.
+    */
+    final Property<String> customCodePath
 
     CodeQualityExtension(project) {
         this.sonarClasspath = project.objects.property(FileCollection)
         this.jacocoCliClasspath = project.objects.property(FileCollection)
+        this.customCodePath = project.objects.property(String)
+        this.customCodePath.set('bin/custom')
     }
 
     void setJacocoDependency(jacocoDependency) {

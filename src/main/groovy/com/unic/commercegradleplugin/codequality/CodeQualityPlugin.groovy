@@ -6,6 +6,7 @@ package com.unic.commercegradleplugin.codequality
 
 import com.unic.commercegradleplugin.codequality.rule.JacocoInstrumentationRule
 import com.unic.commercegradleplugin.codequality.task.SonarRunner
+import com.unic.commercegradleplugin.codequality.task.JacocoReport
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -17,7 +18,7 @@ class CodeQualityPlugin implements Plugin<Project> {
     def extension
     def jacocoConfiguration
     def jacocoCliConfiguration
-    def sonarrunnerConfiguration
+    def sonarRunnerConfiguration
     File hybrisDir
     JacocoInstrumentationRule jacocoInstrumentationRule
 
@@ -36,8 +37,9 @@ class CodeQualityPlugin implements Plugin<Project> {
             sonarProjectDir = project.projectDir
         }
 
-        project.tasks.create('jacocoReport', com.unic.commercegradleplugin.codequality.task.JacocoReport) {
+        project.tasks.create('jacocoReport', JacocoReport) {
             jacocoCliClasspath = extension.jacocoCliClasspath
+            customCodePath = extension.customCodePath
             jacocoCliWorkingDir = project.projectDir
             hybrisDir = this.hybrisDir
         }
@@ -55,10 +57,10 @@ class CodeQualityPlugin implements Plugin<Project> {
             }
             jacocoConfiguration = project.configurations.codeQualityJacoco
             jacocoCliConfiguration = project.configurations.codeQualityJacocoCli
-            sonarrunnerConfiguration = project.configurations.codeQualitySonarrunner
+            sonarRunnerConfiguration = project.configurations.codeQualitySonarrunner
 
             // pass the sonar jar to the SonarRunner task (to be used as classpath)
-            extension.sonarClasspath.set(project.files(sonarrunnerConfiguration.singleFile))
+            extension.sonarClasspath.set(project.files(sonarRunnerConfiguration.singleFile))
             // pass the jacoco-cli jar to the JacocoReport task (to be used as classpath)
             extension.jacocoCliClasspath.set(project.files(jacocoCliConfiguration.singleFile))
             // pass the jacoco-agent jar to the JacocoInstrumentationRule
