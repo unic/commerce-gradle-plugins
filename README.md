@@ -4,7 +4,13 @@
 
 This plugin supplies tasks and extensions to help with analyzing the code quality of a SAP Commerce project.
 
-Since such projects cannot rely on the common sonarqube and jacoco plugins for technical reasons, a plugin lik this one is required to do SCA on such projects.
+Since such projects cannot rely on the common sonarqube and jacoco plugins for technical reasons, a plugin like this one is required to do the SCA.
+
+### History
+
+Originally Unic had their own toolchain to build, test, analyze, deploy and configure applications in their own and their customer's hosting environment. As SAP presented the Commerce Cloud v2 environment the toolchain became less relevant and the deploy & configure components have been deprecated. With the introduction of the [commerce-gradle-plugin](https://github.com/SAP/commerce-gradle-plugin), which seems to share some ideas with the Unic toolchain, the build and test components were deprecated, too.
+
+So far the `codequality` component has survived.
 
 ## Prerequsites
 
