@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2022 Unic AG.
+ */
+
 package com.unic.commercegradleplugin.codequality
 
 
