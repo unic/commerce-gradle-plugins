@@ -46,9 +46,12 @@ apply<CodeQualityPlugin>()
 
 ### _jacoco\<targettask>_ Rule
 
-To generate coverage data you need to configure the tasks that need to be enhanced in order to enable fon-the-fly instrumentation by the jacoco agent.
+To generate coverage data you need to configure the tasks that need to be enhanced in order to enable on-the-fly instrumentation by the jacoco agent.
 
 This tasks wraps any _target task_ with supplemental tasks, which reconfigure a hybris installation to enable or disable jacoco on-the-fly instrumentation to generate .exec files before or after running the actual _target task_, respectively. The _target task_ name is being used to generate a target file name for the jacoco execution data. The following pattern will be used: `${projectDir}/hybris/log/jacoco/jacoco-${classifier}.exec`.
+
+**Example**
+`./gradlew jacocoYUnittests jacocoYIntegrationtests`
 
 ### _jacocoReport_ Task
 
@@ -56,7 +59,7 @@ In order for sonar to be able to pick up the reports, you will have to compile t
 
 ### _sonar_ Task
 
-This tasks executed the Sonar Runner to analyze your code and push a new report to Sonarqube.
+This task executes the Sonar Runner to analyze your code and pushes a new report to Sonarqube.
 ## Restrictions / Notes
 
 Currently the jacoco related extensions are assuming that hybris is installed in `${projectDir}/hybris`.
