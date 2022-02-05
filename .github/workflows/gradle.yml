@@ -25,7 +25,7 @@ jobs:
       with:
         arguments: build
     
-    - name: JUnit Report Action
+    - name: JUnit Report
       uses: mikepenz/action-junit-report@v2.9.1
       with:
         report_paths: /build/test-reports/test/*
