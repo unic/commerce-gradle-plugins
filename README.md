@@ -1,5 +1,7 @@
 # Unic commerce-gradle-plugins: Code Quality
 
+[![CI](https://github.com/unic/commerce-gradle-plugins/actions/workflows/gradle.yml/badge.svg)](https://github.com/unic/commerce-gradle-plugins/actions/workflows/gradle.yml)
+
 ## Goal
 
 This plugin supplies tasks and extensions to help with analyzing the code quality of a SAP Commerce project.
