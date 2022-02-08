@@ -102,5 +102,4 @@ rootProject.name = 'hybris-toolkit'
 Make sure the `mavenLocal()` is the first line in the `repositories` section as otherwise you will run into
 very strange errors.
 
-
 This is a dummy edit to demonstrate GitHub Actions
