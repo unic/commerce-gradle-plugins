@@ -1,11 +1,24 @@
 /*
- * Copyright (c) 2019 Unic AG
+ * Copyright (c) 2022 Unic AG
  */
 
 plugins {
 	id 'java-gradle-plugin'
 	id 'maven-publish'
-	id 'groovy'
+    id 'com.gradle.plugin-publish' version '0.16.0'
+    id 'org.sonarqube' version '3.3'
+    id 'jacoco'
+	id 'java'
+}
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+pluginBundle {
+    website = 'https://github.com/unic/commerce-gradle-plugins'
+    vcsUrl = 'https://github.com/unic/commerce-gradle-plugins'
+    tags = ['sap', 'commerce', 'code quality', 'sonar', 'hybris']
 }
 
 repositories {
@@ -16,16 +29,40 @@ dependencies {
 	implementation 'com.google.guava:guava:27.0.1-jre'
 	testImplementation gradleTestKit()
 	testImplementation 'junit:junit:4.12'
-	testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
+    testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+    }
 }
 
 gradlePlugin {
 	plugins {
 		codequality {
 			id = 'com.unic.commercegradleplugin.codequality'
+            displayName = 'Unic SAP Commerce code quality plugin'
+            description = 'Allows SCA with jacoco and Sonar for SAP Commerce based projects'
 			implementationClass = 'com.unic.commercegradleplugin.codequality.CodeQualityPlugin'
 		}
 	}
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "unic_commerce-gradle-plugins"
+    property "sonar.organization", "unic"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
 
 publishing {
