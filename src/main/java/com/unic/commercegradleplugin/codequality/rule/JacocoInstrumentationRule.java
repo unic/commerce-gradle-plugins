@@ -12,6 +12,7 @@ import org.gradle.api.Project;
 import org.gradle.api.Rule;
 import org.gradle.api.Task;
 import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.TaskExecutionException;
 
 
 public class JacocoInstrumentationRule implements Rule {
@@ -44,7 +45,7 @@ public class JacocoInstrumentationRule implements Rule {
 						enableJacoco(targetTask.getName());
 					}
 					catch (IOException e) {
-						e.printStackTrace();
+						throw new TaskExecutionException(t, e);
 					}
 				});
 				t.finalizedBy(targetTask);
@@ -56,7 +57,7 @@ public class JacocoInstrumentationRule implements Rule {
 						disableJacoco();
 					}
 					catch (IOException e) {
-						e.printStackTrace();
+						throw new TaskExecutionException(t, e);
 					}
 				});
 			});
@@ -86,7 +87,7 @@ public class JacocoInstrumentationRule implements Rule {
 	}
 
 	String determineJacocoArgs(String classifier) {
-		Path destination = hybrisDir.toPath().resolve("log/jacoco/jacoco-"+classifier+".exec");
+		Path destination = hybrisDir.toPath().resolve("log/jacoco/jacoco-" + classifier + ".exec");
 		project.getLogger().debug("Jacoco report output file: {}", destination.toAbsolutePath());
 		String args = String.format("-DjacocoConf=start -javaagent:%s=destfile=%s,append=true,excludes=*Test -DjacocoConf=end",
 				jacocoJar.get(), destination.toAbsolutePath());
