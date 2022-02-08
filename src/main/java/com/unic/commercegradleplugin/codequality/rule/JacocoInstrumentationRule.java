@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Rule;
 import org.gradle.api.Task;
 import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.TaskExecutionException;
 
 
 public class JacocoInstrumentationRule implements Rule {
@@ -35,55 +35,48 @@ public class JacocoInstrumentationRule implements Rule {
 
 	@Override
 	public void apply(String taskName) {
-		if (taskName.startsWith(PREFIX)) {
-			String targetTaskName = uncapitalize(taskName.replaceAll(PREFIX, ""));
-			Task targetTask = project.getTasks().named(targetTaskName).get();
-
-			project.getTasks().create(taskName, t -> {
-				t.doLast(l -> {
-					try {
-						enableJacoco(targetTask.getName());
-					}
-					catch (IOException e) {
-						throw new TaskExecutionException(t, e);
-					}
-				});
-				t.finalizedBy(targetTask);
-			});
-
-			Task cleanupTask = project.getTasks().create(taskName + "Cleanup", t -> {
-				t.doLast(l -> {
-					try {
-						disableJacoco();
-					}
-					catch (IOException e) {
-						throw new TaskExecutionException(t, e);
-					}
-				});
-			});
-
-			targetTask.finalizedBy(cleanupTask);
+		if (!taskName.startsWith(PREFIX)) {
+			return;
 		}
+		Task targetTask = project.getTasks().named(dePrefix(taskName)).get();
+		Task jacocoTask = project.getTasks().create(taskName, t -> {
+			t.doLast(l -> {
+				enableJacoco(targetTask.getName());
+			});
+		});
+		Task cleanupTask = project.getTasks().create(taskName + "Cleanup", t -> {
+			t.doLast(l -> {
+				disableJacoco();
+			});
+		});
+		jacocoTask.finalizedBy(targetTask);
+		targetTask.finalizedBy(cleanupTask);
 	}
 
 
-	void enableJacoco(String classifier) throws IOException {
+	void enableJacoco(String classifier) {
 		project.getLogger().info("BEWARE: Appending Jacoco configuration for {} tests to 'standalone.javaoptions'!", classifier);
 
 		String args = determineJacocoArgs(classifier);
 
 		Path configFile = getConfigFile();
-		String config = Files.readString(configFile);
 		String newConfig;
-		if (config.matches("(?ms).*^standalone\\.javaoptions=.*?$.*")) {
-			newConfig = config.replaceAll("(?m)^(standalone\\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$",
-					"$1 " + args);
-		}
-		else {
-			newConfig = config + '\n' + "standalone.javaoptions=-DjacocoConf=fulldelete " + args;
-		}
 
-		Files.writeString(configFile, newConfig);
+		try {
+			String config = Files.readString(configFile);
+			if (config.matches("(?ms).*^standalone\\.javaoptions=.*?$.*")) {
+				newConfig = config.replaceAll("(?m)^(standalone\\.javaoptions=.*?)(-DjacocoConf=start.*-DjacocoConf=end)?$",
+						"$1 " + args);
+			}
+			else {
+				newConfig = config + '\n' + "standalone.javaoptions=-DjacocoConf=fulldelete " + args;
+			}
+
+			Files.writeString(configFile, newConfig);
+		}
+		catch (IOException e) {
+			throw new GradleException("Failed to enable Jacoco instrumentation!", e);
+		}
 	}
 
 	String determineJacocoArgs(String classifier) {
@@ -94,23 +87,32 @@ public class JacocoInstrumentationRule implements Rule {
 		return args;
 	}
 
-	void disableJacoco() throws IOException {
+	void disableJacoco() {
 		project.getLogger().info("BEWARE: Removing Jacoco configuration from 'standalone.javaoptions'");
 
 		Path configFile = getConfigFile();
-		String config = Files.readString(configFile);
 
-		config = config.replaceAll("(?m)^(standalone\\.javaoptions=.*?)(.-DjacocoConf=start.*-DjacocoConf=end)?$", "$1");
-		config = config.replaceAll("(?m)^\nstandalone\\.javaoptions=-DjacocoConf=fulldelete.*$", "");
+		try {
+			String config = Files.readString(configFile);
 
-		Files.writeString(configFile, config);
+			config = config.replaceAll("(?m)^(standalone\\.javaoptions=.*?)(.-DjacocoConf=start.*-DjacocoConf=end)?$", "$1");
+			config = config.replaceAll("(?m)^\nstandalone\\.javaoptions=-DjacocoConf=fulldelete.*$", "");
+
+			Files.writeString(configFile, config);
+		}
+		catch (IOException e) {
+			throw new GradleException("Failed to disable Jacoco instrumentation!", e);
+		}
 	}
 
 	Path getConfigFile() {
 		return hybrisDir.toPath().resolve("config/local.properties");
 	}
 
-	String uncapitalize(String input) {
-		return Character.toLowerCase(input.charAt(0)) + (input.length() > 1 ? input.substring(1) : "");
+	String dePrefix(String input) {
+		String dePrefixedInput = input.replaceAll(PREFIX, "");
+		return Character.toLowerCase(dePrefixedInput.charAt(0)) + (dePrefixedInput.length() > 1
+				? dePrefixedInput.substring(1)
+				: "");
 	}
 }

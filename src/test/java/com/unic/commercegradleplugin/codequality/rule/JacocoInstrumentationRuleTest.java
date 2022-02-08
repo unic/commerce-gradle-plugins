@@ -4,25 +4,38 @@
 
 package com.unic.commercegradleplugin.codequality.rule;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.gradle.api.Action;
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.TaskContainer;
+import org.gradle.api.tasks.TaskProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 
+import groovy.lang.Closure;
 import junit.framework.TestCase;
 
 
@@ -171,6 +184,48 @@ public class JacocoInstrumentationRuleTest extends TestCase {
 		String expected = "foo=bar\nboo=yakka\n";
 
 		assertEquals(expected, actual);
+	}
+
+	@Test(expected = GradleException.class)
+	public void testDisableNoConfigExists() throws IOException {
+		localproperties.delete();
+
+		ruleUnderTest.disableJacoco();
+
+	}
+	@Test(expected = GradleException.class)
+	public void testEnableNoConfigExists() throws IOException {
+		localproperties.delete();
+
+		ruleUnderTest.enableJacoco("foobar");
+
+	}
+
+	@Test
+	public void testDePrefix(){
+		assertEquals("test",ruleUnderTest.dePrefix("jacocoTest"));
+		assertEquals("test",ruleUnderTest.dePrefix("jacocotest"));
+		assertEquals("wrongprefixTest",ruleUnderTest.dePrefix("wrongprefixTest"));
+	}
+
+	@Test
+	public void testTaskDoesApply(){
+		TaskContainer tasks = mock(TaskContainer.class);
+		TaskProvider targetTaskProvider = mock(TaskProvider.class);
+		Task targetTask = mock(Task.class);
+		Task jacocoTask = mock(Task.class);
+		Task cleanupTask = mock(Task.class);
+
+		when(project.getTasks()).thenReturn(tasks);
+		when(tasks.named("testTarget")).thenReturn(targetTaskProvider);
+		when(targetTaskProvider.get()).thenReturn(targetTask);
+		when(tasks.create(eq("jacocoTestTarget"), any(Action.class))).thenReturn(jacocoTask);
+		when(tasks.create(eq("jacocoTestTargetCleanup"),any(Action.class))).thenReturn(cleanupTask);
+
+		ruleUnderTest.apply("jacocoTestTarget");
+
+		verify(jacocoTask).finalizedBy(targetTask);
+		verify(targetTask).finalizedBy(cleanupTask);
 	}
 
 }
