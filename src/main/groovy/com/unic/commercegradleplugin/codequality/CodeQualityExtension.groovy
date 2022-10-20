@@ -18,17 +18,17 @@ class CodeQualityExtension {
     /**
      * The depencency string used to fetch the jacoco agent jar.
      */
-    def jacocoDependency = 'org.jacoco:org.jacoco.agent:0.8.7:runtime'
+    def jacocoDependency = 'org.jacoco:org.jacoco.agent:0.8.8:runtime'
 
     /**
      * The depencency string used to fetch the jacoco cli jar.
      */
-    def jacocoCliDependency = 'org.jacoco:org.jacoco.cli:0.8.7:nodeps@jar'
+    def jacocoCliDependency = 'org.jacoco:org.jacoco.cli:0.8.8:nodeps@jar'
 
     /**
      * The depencency string used to fetch the sonarrunner jar.
      */
-    def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:4.6.2.2472@jar'
+    def sonarrunnerDependency = 'org.sonarsource.scanner.cli:sonar-scanner-cli:4.7.0.2747@jar'
 
     /**
     * The location of your custom SAP Commerce extensions relative to the hybris directory.
